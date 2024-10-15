@@ -1,0 +1,8 @@
+.venv/
+alembic/
+storage/
+taxonomy/
+.env
+alembic.ini
+test.py
+.idea/

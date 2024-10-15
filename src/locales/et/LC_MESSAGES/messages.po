@@ -1,0 +1,256 @@
+# Estonian translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-14 13:54+0300\n"
+"PO-Revision-Date: 2024-10-14 13:57+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: et\n"
+"Language-Team: et <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: src/routes/advertisement.py:20 src/routes/home.py:97
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *title* of the ad.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Postita kuulutus*\n"
+"\n"
+"📝 Saada mulle kuulutuse *pealkiri*.\n"
+"\n"
+"🚫 Saada /cancel, et tühistada toiming."
+
+#: src/routes/advertisement.py:30
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *description* of the ad."
+msgstr ""
+"📤 *Postita kuulutus*\n"
+"\n"
+"📝 Saada mulle kuulutuse *kirjeldus*."
+
+#: src/routes/advertisement.py:39
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"💵 Send me the *price* of the ad."
+msgstr ""
+"📤 *Postita kuulutus*\n"
+"\n"
+"💵 Saada mulle kuulutuse *hind*."
+
+#: src/routes/category.py:32 src/routes/category.py:103
+msgid "No categories found."
+msgstr "Kategooriaid ei leitud."
+
+#: src/routes/category.py:83
+msgid "🔍 Search"
+msgstr "🔍 Otsi"
+
+#: src/routes/category.py:91 src/utils/helpers.py:72
+msgid "⬅️ Back"
+msgstr "⬅️ Tagasi"
+
+#: src/routes/category.py:96
+msgid "➡️ Forward"
+msgstr "➡️ Edasi"
+
+#: src/routes/category.py:118
+msgid "Please select a category:"
+msgstr "Palun vali kategooria:"
+
+#: src/routes/category.py:152
+msgid "Category not found."
+msgstr "Kategooriat ei leitud."
+
+#: src/routes/category.py:168
+msgid "Category selected."
+msgstr "Kategooria valitud."
+
+#: src/routes/category.py:178
+msgid "Please enter your search query:"
+msgstr "Palun sisesta oma otsingupäring:"
+
+#: src/routes/category.py:192
+msgid "Please enter a valid search query."
+msgstr "Palun sisesta kehtiv otsingupäring."
+
+#: src/routes/faq.py:34
+msgid ""
+"❕ *How to advertise on the platform?*\n"
+"\n"
+"1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
+"posting an ad.\n"
+"\n"
+"2️⃣ Fill in the required fields: *title*, *description*, *price*, "
+"*category*, *location*.\n"
+"\n"
+"3️⃣ Upload *photos* of the product you are selling.\n"
+"\n"
+"4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
+"\n"
+"5️⃣ Wait for the ad to be *approved* by the moderator.\n"
+"\n"
+"6️⃣ Once the ad is approved, it will be available for viewing by other "
+"users."
+msgstr ""
+"❕ *Kuidas platvormil reklaamida?*\n"
+"\n"
+"1️⃣ Klõpsa peamenüüs nupule *\"📤 Postita kuulutus\"*, et alustada kuulutuse postitamist.\n"
+"\n"
+"2️⃣ Täida nõutud väljad: *pealkiri*, *kirjeldus*, *hind*, *kategooria*, *asukoht*.\n"
+"\n"
+"3️⃣ Laadi üles müüdava toote *fotod*.\n"
+"\n"
+"4️⃣ Klõpsa nupule *\"📤 Postita\"*, et kuulutus avaldada.\n"
+"\n"
+"5️⃣ Oota, kuni kuulutus on *moderaatori poolt heaks kiidetud*.\n"
+"\n"
+"6️⃣ Kui kuulutus on heaks kiidetud, on see teistele kasutajatele nähtav."
+
+#: src/routes/faq.py:63
+msgid ""
+"❕ *What is the cost of advertising?*\n"
+"\n"
+"🔹 The cost of advertising on the platform is *free*.\n"
+"\n"
+"🔹 You can post an unlimited number of ads without any restrictions."
+msgstr ""
+"❕ *Mis on reklaami maksumus?*\n"
+"\n"
+"🔹 Reklaami postitamine platvormil on *tasuta*.\n"
+"\n"
+"🔹 Sa võid postitada piiramatul hulgal kuulutusi ilma piiranguteta."
+
+#: src/routes/faq.py:90
+msgid ""
+"❕ *What we do with your ads?*\n"
+"\n"
+"🔹 We *moderate* all ads before they are published on the platform.\n"
+"\n"
+"🔹 We *check* the ad for compliance with the rules of the platform.\n"
+"\n"
+"🔹 We *approve* the ad if it meets the requirements."
+msgstr ""
+"❕ *Mida me teeme teie kuulutustega?*\n"
+"\n"
+"🔹 Me *modereerime* kõiki kuulutusi enne nende avaldamist platvormil.\n"
+"\n"
+"🔹 Me *kontrollime* kuulutust, et see vastaks platvormi reeglitele.\n"
+"\n"
+"🔹 Me *kinnitame* kuulutuse, kui see vastab nõuetele."
+
+#: src/routes/faq.py:133
+msgid ""
+"📚 *FAQ*\n"
+"\n"
+"👇 Here you can find answers to frequently asked questions.\n"
+"\n"
+"🔹 *How to advertise on the platform?*\n"
+"🔹 *What is the cost of advertising?*\n"
+"🔹 *What we do with your ads?*\n"
+"👇 *Choose a question* to get an answer."
+msgstr ""
+"📚 *KKK*\n"
+"\n"
+"👇 Siit leiad vastused korduma kippuvatele küsimustele.\n"
+"\n"
+"🔹 *Kuidas platvormil reklaamida?*\n"
+"🔹 *Mis on reklaami maksumus?*\n"
+"🔹 *Mida me teeme teie kuulutustega?*\n"
+"👇 *Vali küsimus*, et saada vastus."
+
+#: src/routes/faq.py:144
+msgid "🔹 How to advertise on the platform?"
+msgstr "🔹 Kuidas platvormil reklaamida?"
+
+#: src/routes/faq.py:147
+msgid "🔹 What is the cost of advertising?"
+msgstr "🔹 Mis on reklaami maksumus?"
+
+#: src/routes/faq.py:150
+msgid "🔹 What we do with your ads?"
+msgstr "🔹 Mida me teeme teie kuulutustega?"
+
+#: src/routes/home.py:22
+msgid ""
+"👋 Hello, *{username}*.\n"
+"I'm *Seller — curator of your ads*.\n"
+"\n"
+"🌟 Here you can post your *ads* for *selling* your product."
+msgstr ""
+"👋 Tere, *{username}*.\n"
+"Olen *Müüja — teie kuulutuste kuraator*.\n"
+"\n"
+"🌟 Siin saate postitada oma *kuulutusi* oma toote *müümiseks*."
+
+#: src/routes/home.py:28 src/routes/home.py:90
+msgid "📤 Post an ad"
+msgstr "📤 Postita kuulutus"
+
+#: src/routes/home.py:28
+msgid "📦 My ads"
+msgstr "📦 Minu kuulutused"
+
+#: src/routes/home.py:29
+msgid "🌐 Language"
+msgstr "🌐 Keel"
+
+#: src/routes/home.py:34 src/routes/home.py:104 src/routes/home.py:117
+msgid "📦 Requested ads"
+msgstr "📦 Nõutud kuulutused"
+
+#: src/routes/home.py:34 src/routes/home.py:105 src/routes/home.py:115
+#: src/routes/home.py:131
+msgid "📜 Error logs"
+msgstr "📜 Vealogid"
+
+#: src/routes/home.py:36 src/routes/home.py:78
+msgid "📝 Manage Categories"
+msgstr "📝 Halda kategooriaid"
+
+#: src/routes/home.py:36
+msgid "📊 Statistics"
+msgstr "📊 Statistika"
+
+#: src/routes/home.py:87 src/routes/home.py:112
+msgid "❌ You do not have access to this command."
+msgstr "❌ Teil pole sellele käsule juurdepääsu."
+
+#: src/routes/home.py:99
+msgid "🚫 Cancel"
+msgstr "🚫 Tühista"
+
+#: src/routes/home.py:118
+msgid "🚧 This feature is under construction"
+msgstr "🚧 See funktsioon on väljatöötamisel"
+
+#: src/routes/home.py:134 src/routes/home.py:140
+msgid "Logs feature is under construction."
+msgstr "Logide funktsioon on väljatöötamisel."
+
+#: src/utils/helpers.py:53
+msgid "⬅️ Prev"
+msgstr "⬅️ Eelmine"
+
+#: src/utils/helpers.py:57
+msgid "Next ➡️"
+msgstr "Järgmine ➡️"
+
+#: src/utils/helpers.py:80
+msgid "🏠 Home"
+msgstr "🏠 Kodu"
+

@@ -1,0 +1,9 @@
+python-dotenv~=1.0.1
+SQLAlchemy~=2.0.35
+aiogram~=3.13.1
+babel~=2.16.0
+alembic~=1.13.3
+aiofiles~=24.1.0
+deep-translator~=1.11.4
+redis[hiredis]~=5.1.1
+rich~=13.9.2

@@ -1,0 +1,257 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-14 13:54+0300\n"
+"PO-Revision-Date: 2024-10-14 13:56+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: src/routes/advertisement.py:20 src/routes/home.py:97
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *title* of the ad.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Опубликовать объявление*\n"
+"\n"
+"📝 Отправьте мне *название* объявления.\n"
+"\n"
+"🚫 Отправьте /cancel, чтобы отменить операцию."
+
+#: src/routes/advertisement.py:30
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *description* of the ad."
+msgstr ""
+"📤 *Опубликовать объявление*\n"
+"\n"
+"📝 Отправьте мне *описание* объявления."
+
+#: src/routes/advertisement.py:39
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"💵 Send me the *price* of the ad."
+msgstr ""
+"📤 *Опубликовать объявление*\n"
+"\n"
+"💵 Отправьте мне *цену* объявления."
+
+#: src/routes/category.py:32 src/routes/category.py:103
+msgid "No categories found."
+msgstr "Категории не найдены."
+
+#: src/routes/category.py:83
+msgid "🔍 Search"
+msgstr "🔍 Поиск"
+
+#: src/routes/category.py:91 src/utils/helpers.py:72
+msgid "⬅️ Back"
+msgstr "⬅️ Назад"
+
+#: src/routes/category.py:96
+msgid "➡️ Forward"
+msgstr "➡️ Вперед"
+
+#: src/routes/category.py:118
+msgid "Please select a category:"
+msgstr "Пожалуйста, выберите категорию:"
+
+#: src/routes/category.py:152
+msgid "Category not found."
+msgstr "Категория не найдена."
+
+#: src/routes/category.py:168
+msgid "Category selected."
+msgstr "Категория выбрана."
+
+#: src/routes/category.py:178
+msgid "Please enter your search query:"
+msgstr "Пожалуйста, введите ваш поисковый запрос:"
+
+#: src/routes/category.py:192
+msgid "Please enter a valid search query."
+msgstr "Пожалуйста, введите корректный поисковый запрос."
+
+#: src/routes/faq.py:34
+msgid ""
+"❕ *How to advertise on the platform?*\n"
+"\n"
+"1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
+"posting an ad.\n"
+"\n"
+"2️⃣ Fill in the required fields: *title*, *description*, *price*, "
+"*category*, *location*.\n"
+"\n"
+"3️⃣ Upload *photos* of the product you are selling.\n"
+"\n"
+"4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
+"\n"
+"5️⃣ Wait for the ad to be *approved* by the moderator.\n"
+"\n"
+"6️⃣ Once the ad is approved, it will be available for viewing by other "
+"users."
+msgstr ""
+"❕ *Как разместить рекламу на платформе?*\n"
+"\n"
+"1️⃣ Нажмите на кнопку *\"📤 Опубликовать объявление\"* в главном меню, чтобы начать размещение объявления.\n"
+"\n"
+"2️⃣ Заполните обязательные поля: *название*, *описание*, *цена*, *категория*, *местоположение*.\n"
+"\n"
+"3️⃣ Загрузите *фотографии* продаваемого товара.\n"
+"\n"
+"4️⃣ Нажмите на кнопку *\"📤 Опубликовать\"*, чтобы опубликовать объявление.\n"
+"\n"
+"5️⃣ Дождитесь, пока объявление будет *одобрено* модератором.\n"
+"\n"
+"6️⃣ После одобрения объявление будет доступно для просмотра другими пользователями."
+
+#: src/routes/faq.py:63
+msgid ""
+"❕ *What is the cost of advertising?*\n"
+"\n"
+"🔹 The cost of advertising on the platform is *free*.\n"
+"\n"
+"🔹 You can post an unlimited number of ads without any restrictions."
+msgstr ""
+"❕ *Какова стоимость рекламы?*\n"
+"\n"
+"🔹 Размещение рекламы на платформе *бесплатно*.\n"
+"\n"
+"🔹 Вы можете размещать неограниченное количество объявлений без каких-либо ограничений."
+
+#: src/routes/faq.py:90
+msgid ""
+"❕ *What we do with your ads?*\n"
+"\n"
+"🔹 We *moderate* all ads before they are published on the platform.\n"
+"\n"
+"🔹 We *check* the ad for compliance with the rules of the platform.\n"
+"\n"
+"🔹 We *approve* the ad if it meets the requirements."
+msgstr ""
+"❕ *Что мы делаем с вашими объявлениями?*\n"
+"\n"
+"🔹 Мы *модерируем* все объявления перед их публикацией на платформе.\n"
+"\n"
+"🔹 Мы *проверяем* объявление на соответствие правилам платформы.\n"
+"\n"
+"🔹 Мы *одобряем* объявление, если оно соответствует требованиям."
+
+#: src/routes/faq.py:133
+msgid ""
+"📚 *FAQ*\n"
+"\n"
+"👇 Here you can find answers to frequently asked questions.\n"
+"\n"
+"🔹 *How to advertise on the platform?*\n"
+"🔹 *What is the cost of advertising?*\n"
+"🔹 *What we do with your ads?*\n"
+"👇 *Choose a question* to get an answer."
+msgstr ""
+"📚 *Часто задаваемые вопросы*\n"
+"\n"
+"👇 Здесь вы можете найти ответы на часто задаваемые вопросы.\n"
+"\n"
+"🔹 *Как разместить рекламу на платформе?*\n"
+"🔹 *Какова стоимость рекламы?*\n"
+"🔹 *Что мы делаем с вашими объявлениями?*\n"
+"👇 *Выберите вопрос*, чтобы получить ответ."
+
+#: src/routes/faq.py:144
+msgid "🔹 How to advertise on the platform?"
+msgstr "🔹 Как разместить рекламу на платформе?"
+
+#: src/routes/faq.py:147
+msgid "🔹 What is the cost of advertising?"
+msgstr "🔹 Какова стоимость рекламы?"
+
+#: src/routes/faq.py:150
+msgid "🔹 What we do with your ads?"
+msgstr "🔹 Что мы делаем с вашими объявлениями?"
+
+#: src/routes/home.py:22
+msgid ""
+"👋 Hello, *{username}*.\n"
+"I'm *Seller — curator of your ads*.\n"
+"\n"
+"🌟 Here you can post your *ads* for *selling* your product."
+msgstr ""
+"👋 Здравствуйте, *{username}*.\n"
+"Я *Продавец — куратор ваших объявлений*.\n"
+"\n"
+"🌟 Здесь вы можете размещать свои *объявления* для *продажи* вашего товара."
+
+#: src/routes/home.py:28 src/routes/home.py:90
+msgid "📤 Post an ad"
+msgstr "📤 Опубликовать объявление"
+
+#: src/routes/home.py:28
+msgid "📦 My ads"
+msgstr "📦 Мои объявления"
+
+#: src/routes/home.py:29
+msgid "🌐 Language"
+msgstr "🌐 Язык"
+
+#: src/routes/home.py:34 src/routes/home.py:104 src/routes/home.py:117
+msgid "📦 Requested ads"
+msgstr "📦 Запрашиваемые объявления"
+
+#: src/routes/home.py:34 src/routes/home.py:105 src/routes/home.py:115
+#: src/routes/home.py:131
+msgid "📜 Error logs"
+msgstr "📜 Журналы ошибок"
+
+#: src/routes/home.py:36 src/routes/home.py:78
+msgid "📝 Manage Categories"
+msgstr "📝 Управление категориями"
+
+#: src/routes/home.py:36
+msgid "📊 Statistics"
+msgstr "📊 Статистика"
+
+#: src/routes/home.py:87 src/routes/home.py:112
+msgid "❌ You do not have access to this command."
+msgstr "❌ У вас нет доступа к этой команде."
+
+#: src/routes/home.py:99
+msgid "🚫 Cancel"
+msgstr "🚫 Отмена"
+
+#: src/routes/home.py:118
+msgid "🚧 This feature is under construction"
+msgstr "🚧 Эта функция находится в разработке"
+
+#: src/routes/home.py:134 src/routes/home.py:140
+msgid "Logs feature is under construction."
+msgstr "Функция журналов находится в разработке."
+
+#: src/utils/helpers.py:53
+msgid "⬅️ Prev"
+msgstr "⬅️ Назад"
+
+#: src/utils/helpers.py:57
+msgid "Next ➡️"
+msgstr "Вперед ➡️"
+
+#: src/utils/helpers.py:80
+msgid "🏠 Home"
+msgstr "🏠 Домой"
+
