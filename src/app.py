@@ -68,13 +68,9 @@ class Application:
             print("Database connection failed.")
             return
 
-        # Register the exception handler.
-        self.__init_exception_handler()
-
         await self.__bot.delete_webhook(drop_pending_updates=True)
         await self.__dispatcher.start_polling(
-            self.__bot,
-            skip_updates=True
+            self.__bot
         )
 
     def __init_exception_handler(self) -> None:

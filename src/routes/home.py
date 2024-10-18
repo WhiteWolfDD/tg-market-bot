@@ -93,7 +93,7 @@ async def handle_manage_categories(message: Message, state: FSMContext) -> None:
 
 @router.message(F.text == __('📦 Requested ads'))
 @router.message(F.text == __('📜 Error logs'))
-async def handle_admin_commands(message: Message, state: FSMContext) -> None:
+async def handle_admin_commands(message: Message) -> None:
     """
     Обработка команд администратора.
     """
@@ -121,6 +121,7 @@ async def manage_categories(message: Message, state: FSMContext) -> None:
     Управление категориями администратора.
     """
     categories = await get_categories()
+    await state.clear()
     await state.update_data(categories=categories)
     user_language = message.from_user.language_code or 'en'
     await show_categories(message, categories, user_language, state, parent_id=None)
@@ -147,7 +148,7 @@ async def delete_exception_logs(query: CallbackQuery) -> None:
 
 
 @router.callback_query(ViewExceptionLogCallback.filter())
-async def view_exception_log(query: CallbackQuery, callback_data: ViewExceptionLogCallback) -> None:
+async def view_exception_log(query: CallbackQuery) -> None:
     """Просмотр лога ошибки (только для администраторов)."""
     await query.answer(
         text=escape_markdown(
