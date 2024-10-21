@@ -2,13 +2,13 @@ import os
 from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 
-from src.callbacks.admin import ViewExceptionLogCallback, DeleteExceptionLogsCallback
 from src.routes.advertisement import start_post_ad
 from src.routes.category import show_categories, get_categories
+from src.routes.exception_logs import view_exception_logs
 from src.utils.helpers import escape_markdown
 
 router = Router()
@@ -125,33 +125,3 @@ async def manage_categories(message: Message, state: FSMContext) -> None:
     await state.update_data(categories=categories)
     user_language = message.from_user.language_code or 'en'
     await show_categories(message, categories, user_language, state, parent_id=None)
-
-
-@router.message(F.text == __('📜 Error logs'))
-async def view_exception_logs(message: Message) -> None:
-    """Обработка команды для просмотра логов от администратора через сообщение."""
-    await message.answer(
-        text=escape_markdown(
-            _('📜 *Exception Logs*\n\n🚧 This feature is under construction.')
-        )
-    )
-
-
-@router.callback_query(DeleteExceptionLogsCallback.filter())
-async def delete_exception_logs(query: CallbackQuery) -> None:
-    """Удаление логов ошибок (только для администраторов)."""
-    await query.answer(
-        text=escape_markdown(
-            _('🚧 This feature is under construction.')
-        )
-    )
-
-
-@router.callback_query(ViewExceptionLogCallback.filter())
-async def view_exception_log(query: CallbackQuery) -> None:
-    """Просмотр лога ошибки (только для администраторов)."""
-    await query.answer(
-        text=escape_markdown(
-            _('🚧 This feature is under construction.')
-        )
-    )

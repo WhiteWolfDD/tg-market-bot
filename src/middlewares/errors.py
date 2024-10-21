@@ -53,7 +53,7 @@ class ErrorsMiddleware(BaseMiddleware):
                 await event.bot.edit_message_reply_markup(
                     chat_id=client_msg.chat.id,
                     message_id=client_msg.message_id,
-                    reply_markup=build_inline_keyboard(keyboard=kbd, home_button=True).as_markup()
+                    reply_markup=build_inline_keyboard(keyboard=kbd).as_markup()
                 )
 
             # Логируем ошибку
