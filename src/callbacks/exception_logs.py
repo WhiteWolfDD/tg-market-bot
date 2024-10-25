@@ -1,14 +1,6 @@
 from aiogram.filters.callback_data import CallbackData
 
 
-class ViewExceptionLogsCallback(CallbackData, prefix="render_exception_logs"):
-    """
-    View exception logs callback.
-    """
-
-    page: int | None = 1
-
-
 class ViewExceptionLogCallback(CallbackData, prefix="view_exception_log"):
     """
     View exception log callback.

@@ -6,30 +6,35 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 
+from src.routes.admin import manage_categories, view_statistics, view_requested_ads, view_exception_logs
 from src.routes.advertisement import start_post_ad
-from src.routes.category import show_categories, get_categories
-from src.routes.exception_logs import view_exception_logs
 from src.utils.helpers import escape_markdown
 
 router = Router()
 
 
-async def home_page(fullname: str, is_admin: bool = False) -> tuple[str, ReplyKeyboardMarkup]:
+def is_admin(user_id: int) -> bool:
+    admins = os.getenv('ADMIN_ID').split(',')
+    return str(user_id) in admins
+
+
+async def home_page(fullname: str) -> tuple[str, ReplyKeyboardMarkup]:
     """
-    Отображает домашнюю страницу с проверкой на администратора.
+    Show the home page.
     """
+
     msg = (
         _("👋 Hello, *{username}*.\nI'm *Seller — curator of your ads*.\n\n"
           '🌟 Here you can post your *ads* for *selling* your product.')
     ).format(username=fullname)
 
-    # Основные кнопки для всех пользователей
+    # Keyboard buttons for users
     keyboard_buttons = [
         [KeyboardButton(text=_('📤 Post an ad')), KeyboardButton(text=_('📦 My ads'))],
         [KeyboardButton(text='📚 FAQ'), KeyboardButton(text=_('🌐 Language'))]
     ]
 
-    # Если пользователь — администратор, добавляем дополнительные кнопки
+    # Keyboard buttons for admins
     if is_admin:
         keyboard_buttons.insert(1, [KeyboardButton(text=_('📦 Requested ads')), KeyboardButton(text=_('📜 Error logs'))])
         keyboard_buttons.insert(2,
@@ -49,7 +54,7 @@ async def start(message: Message, state: FSMContext) -> None:
     Handler for the /start command.
     """
 
-    # Проверка deep_link
+    # Deep linking support
     deep_link = message.text.split(" ")[1] if len(message.text.split(" ")) > 1 else None
     if deep_link == "post_ad":
         await start_post_ad(message, state)
@@ -59,46 +64,22 @@ async def start(message: Message, state: FSMContext) -> None:
 
 async def go_home(message: Message, state: FSMContext) -> None:
     """
-    Отображение главной страницы в зависимости от прав доступа (админ/пользователь).
+    Go to the home page.
     """
+
     if state:
         await state.clear()
 
-    # Проверяем, является ли пользователь администратором
-    admins = os.getenv('ADMIN_ID').split(',')
-    is_admin = str(message.from_user.id) in admins
-
-    # Генерируем сообщение и клавиатуру
-    msg, kbd = await home_page(fullname=message.from_user.full_name, is_admin=is_admin)
-
-    # Отправляем сообщение с клавиатурой
+    msg, kbd = await home_page(fullname=message.from_user.full_name)
     await message.answer(escape_markdown(text=msg), reply_markup=kbd)
 
 
-@router.message(F.text == __('📝 Manage Categories'))
-async def handle_manage_categories(message: Message, state: FSMContext) -> None:
+@router.message(F.text.in_([__('📝 Manage Categories'), __('📦 Requested ads'), __('📜 Error logs'), __('📊 Statistics')]))
+async def handle_admin_commands(message: Message, state: FSMContext) -> None:
     """
-    Обработка команды управления категориями (доступно только для администраторов).
+    Handle admin commands.
     """
-    admins = os.getenv('ADMIN_ID').split(',')
-    if str(message.from_user.id) in admins:
-        await manage_categories(message, state)
-    else:
-        await message.answer(
-            text=escape_markdown(
-                _('❌ You do not have access to this command.')
-            )
-        )
-
-
-@router.message(F.text == __('📦 Requested ads'))
-@router.message(F.text == __('📜 Error logs'))
-async def handle_admin_commands(message: Message) -> None:
-    """
-    Обработка команд администратора.
-    """
-    admins = os.getenv('ADMIN_ID').split(',')
-    if str(message.from_user.id) not in admins:
+    if not is_admin(message.from_user.id):
         await message.answer(
             text=escape_markdown(
                 _('❌ You do not have access to this command.')
@@ -106,22 +87,11 @@ async def handle_admin_commands(message: Message) -> None:
         )
         return
 
-    if message.text == _('📜 Error logs'):
+    if message.text == _('📝 Manage Categories'):
+        await manage_categories(message, state)
+    elif message.text == _('📜 Error logs'):
         await view_exception_logs(message)
     elif message.text == _('📦 Requested ads'):
-        await message.answer(
-            text=escape_markdown(
-                _('🚧 This feature is under construction.')
-            )
-        )
-
-
-async def manage_categories(message: Message, state: FSMContext) -> None:
-    """
-    Управление категориями администратора.
-    """
-    categories = await get_categories()
-    await state.clear()
-    await state.update_data(categories=categories)
-    user_language = message.from_user.language_code or 'en'
-    await show_categories(message, categories, user_language, state, parent_id=None)
+        await view_requested_ads(message)
+    elif message.text == _('📊 Statistics'):
+        await view_statistics(message)

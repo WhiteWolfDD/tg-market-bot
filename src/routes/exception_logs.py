@@ -1,36 +1,19 @@
 import os
-from aiogram import Router, F
+
+from aiogram import Router
 from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
-from aiogram.utils.i18n import lazy_gettext as __
 
 from src.callbacks.category import PaginationCallback
-from src.callbacks.exception_logs import ViewExceptionLogsCallback, ViewExceptionLogCallback, \
+from src.callbacks.exception_logs import ViewExceptionLogCallback, \
     DeleteExceptionLogsCallback, DeleteExceptionLogCallback
 from src.callbacks.main import DeleteMessageCallback
-from src.utils.log import setup_logging
+from src.utils.enums import LogsEnums
 from src.utils.helpers import escape_markdown, build_inline_keyboard
+from src.utils.log import setup_logging
 
 logger = setup_logging()
 router = Router()
-
-
-LOGS_PER_ROW = 3
-LOGS_PER_PAGE = 9
-
-
-@router.message(F.text == __('📜 Error logs'))
-async def view_exception_logs(message: Message) -> None:
-    """
-    View exception logs.
-
-    :param message:
-    :return:
-    """
-
-    # Go to render page
-    await render_exception_logs(message)
-
 
 
 async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) -> None:
@@ -62,7 +45,7 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
         return
 
     # Подсчёт общего количества страниц
-    total_pages = (len(logs) + LOGS_PER_PAGE - 1) // LOGS_PER_PAGE
+    total_pages = (len(logs) + LogsEnums.LOGS_PER_PAGE.value - 1) // LogsEnums.LOGS_PER_PAGE.value
 
     # Ограничение на номера страниц
     if page < 1:
@@ -71,8 +54,8 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
         page = total_pages
 
     # Определение диапазона логов для текущей страницы
-    start = (page - 1) * LOGS_PER_PAGE
-    end = start + LOGS_PER_PAGE
+    start = (page - 1) * LogsEnums.LOGS_PER_PAGE.value
+    end = start + LogsEnums.LOGS_PER_PAGE.value
     current_logs = logs[start:end]
 
     # Подготовка сообщения
@@ -82,8 +65,8 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
     buttons = [
         [
             InlineKeyboardButton(text=f'📄 {log}', callback_data=ViewExceptionLogCallback(log=log).pack())
-            for log in current_logs[i:i + LOGS_PER_ROW]
-        ] for i in range(0, len(current_logs), LOGS_PER_ROW)
+            for log in current_logs[i:i + LogsEnums.LOGS_PER_ROW.value]
+        ] for i in range(0, len(current_logs), LogsEnums.LOGS_PER_ROW.value)
     ]
 
     # Кнопки для переключения страниц

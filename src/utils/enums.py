@@ -15,8 +15,8 @@ class InteractionType(str, Enum):
     FAVORITED = 'favorited'
     SHARED = 'shared'
 
-SUPPORTED_LANGUAGES = {
-    "English": "en",
-    "Русский": "ru",
-    "Eesti": "et"
-}
+class LogsEnums(str, Enum):
+    LOGS_PER_PAGE = 9
+    LOGS_PER_ROW = 3
+    LOG_FILE_PATH = "storage/logs/"
+    DAYS_TO_KEEP_LOGS = 90

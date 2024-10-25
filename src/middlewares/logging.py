@@ -1,22 +1,51 @@
-from datetime import datetime
+import os
+from datetime import datetime, timedelta
 
 from aiogram import BaseMiddleware
+
+from src.utils.enums import LogsEnums
+
+
+def clean_old_logs():
+    """Remove log entries older than DAYS_TO_KEEP_LOGS."""
+    if not os.path.exists(LogsEnums.LOG_FILE_PATH.value + "access.log"):
+        return
+
+    cutoff_date = datetime.now() - timedelta(days=float(LogsEnums.DAYS_TO_KEEP_LOGS.value))
+    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "r") as file:
+        lines = file.readlines()
+
+    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "w") as file:
+        for line in lines:
+            try:
+                # Parse the date in each log entry
+                log_date_str = line.split("]")[0][1:]  # Get the date part
+                log_date = datetime.strptime(log_date_str, "%Y-%m-%d %H:%M:%S")
+
+                # Write the line back if it's within the retention period
+                if log_date >= cutoff_date:
+                    file.write(line)
+            except (ValueError, IndexError):
+                # If there's an error parsing the date, keep the log line as-is
+                file.write(line)
 
 
 class LoggingMiddleware(BaseMiddleware):
     """
-    Middleware for logging each request (access level).
+    Middleware for logging each request (access level) and cleaning up old logs.
     """
+
+    def __init__(self):
+        clean_old_logs()
 
     async def __call__(self, handler, event, data):
         """
-        Make some logging before handling the request.
+        Log each event and clean up logs older than 90 days.
         """
-
         date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg = f"[{date}] {event}"
 
-        with open("storage/logs/access.log", "a") as file:
+        with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "a") as file:
             file.write(msg + "\n")
 
         return await handler(event, data)
