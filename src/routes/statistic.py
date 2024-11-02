@@ -12,8 +12,8 @@ async def collect_statistics():
     """
     Collect bot statistics.
     """
+
     async with get_session() as session:
-        # Используем модели напрямую
         total_users = await session.execute(select(func.count()).select_from(User))
         total_ads = await session.execute(select(func.count()).select_from(Advertisement))
         total_categories = await session.execute(select(func.count()).select_from(Category))

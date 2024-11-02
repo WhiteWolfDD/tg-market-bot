@@ -7,8 +7,10 @@ from aiogram.utils.i18n import lazy_gettext as __
 from src.routes.home import start
 from src.utils.cache import set_user_locale
 from src.utils.helpers import escape_markdown
+from src.utils.log import setup_logging
 
 router = Router()
+logger = setup_logging()
 
 
 @router.message(F.text == __('🌐 Language'))
@@ -34,8 +36,8 @@ async def handle_language_command(message: Message) -> None:
     )
     try:
         await message.delete()
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(f'Error while deleting message: {e}')
 
 
 async def set_language(message: Message, locale: str, state: FSMContext) -> None:

@@ -1,6 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
 
 from sqlalchemy import Numeric, String, ARRAY, ForeignKey, func, CheckConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -88,24 +87,3 @@ class Advertisement(Base):
     __table_args__ = (
         CheckConstraint('price >= 0', name='check_price_positive'),
     )
-
-    # Logic
-    @property
-    def is_active(self) -> bool:
-        return self.status == AdvertisementStatus.APPROVED and self.deleted_at is None
-
-    @property
-    def is_pending(self) -> bool:
-        return self.status == AdvertisementStatus.PENDING and self.deleted_at is None
-
-    @property
-    def is_rejected(self) -> bool:
-        return self.status == AdvertisementStatus.REJECTED and self.deleted_at is None
-
-    def validate(self):
-        if not self.title or len(self.title) > 100:
-            raise ValueError("Title is required and must be less than 100 characters.")
-        if not self.description or len(self.description) > 1000:
-            raise ValueError("Description is required and must be less than 1000 characters.")
-        if self.price < 0:
-            raise ValueError("Price cannot be negative.")

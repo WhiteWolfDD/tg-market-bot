@@ -16,7 +16,7 @@ async def manage_categories(message: Message, state: FSMContext) -> None:
     await state.clear()
     await state.update_data(categories=categories)
     user_language = message.from_user.language_code or 'en'
-    await show_categories(message, categories, user_language, state, parent_id=None)
+    await show_categories(message, categories, user_language, state, parent_id=None, admin_mode=True)
 
 
 async def view_statistics(message: Message) -> None:

@@ -18,7 +18,7 @@ def is_admin(user_id: int) -> bool:
     return str(user_id) in admins
 
 
-async def home_page(fullname: str) -> tuple[str, ReplyKeyboardMarkup]:
+async def home_page(fullname: str, message: Message) -> tuple[str, ReplyKeyboardMarkup]:
     """
     Show the home page.
     """
@@ -35,7 +35,7 @@ async def home_page(fullname: str) -> tuple[str, ReplyKeyboardMarkup]:
     ]
 
     # Keyboard buttons for admins
-    if is_admin:
+    if is_admin(message.from_user.id):
         keyboard_buttons.insert(1, [KeyboardButton(text=_('📦 Requested ads')), KeyboardButton(text=_('📜 Error logs'))])
         keyboard_buttons.insert(2,
                                 [KeyboardButton(text=_('📝 Manage Categories')), KeyboardButton(text=_('📊 Statistics'))])
@@ -70,7 +70,7 @@ async def go_home(message: Message, state: FSMContext) -> None:
     if state:
         await state.clear()
 
-    msg, kbd = await home_page(fullname=message.from_user.full_name)
+    msg, kbd = await home_page(fullname=message.from_user.full_name, message=message)
     await message.answer(escape_markdown(text=msg), reply_markup=kbd)
 
 
