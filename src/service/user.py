@@ -1,10 +1,12 @@
-import hashlib
+import json
+from typing import Optional
 
+from redis import asyncio as aioredis
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload
 
 from src.database import get_session
 from src.models.user import User
+from src.utils.redis import get_redis
 
 
 class UserService:
@@ -13,87 +15,69 @@ class UserService:
     """
 
     @staticmethod
-    async def get_user_by_tg_id(user_id: int) -> User | None:
-        """
-        Get user by Telegram ID.
+    async def get_or_create_user(user_id, event):
+        redis_client = await get_redis()
+        try:
+            user_data = await redis_client.get(f"user:{user_id}")
+        except aioredis.TimeoutError:
+            user_data = None
 
-        :param user_id: Telegram user ID.
-        :return: User.
-        """
+        if user_data:
+            return User(**json.loads(user_data))
 
+        # If not found in cache, query database
         async with get_session() as session:
-            return (await session.execute(
-                select(User)
-                .where(User.telegram_user_id == user_id)
-            )).scalar_one_or_none()
-
-    @classmethod
-    async def get_all_users(cls) -> list[User]:
-        """
-        Get all users.
-
-        :return: List of users.
-        """
-
-        async with get_session() as session:
-            return (await session.execute(
-                select(User)
-            )).scalars().all()
-
-    @staticmethod
-    async def get_user_by_id(user_id: int) -> User | None:
-        """
-        Get user by ID.
-
-        :param user_id: User ID.
-        :return: User.
-        """
-
-        async with get_session() as session:
-            return (await session.execute(
-                select(User)
-                .where(User.id == user_id)
-            )).scalar_one_or_none()
-
-    @staticmethod
-    async def update(user_id: int, **kwargs) -> User | None:
-        """
-        Update user.
-
-        :param user_id: User ID.
-        :param kwargs: User fields.
-        :return: Updated user.
-        """
-
-        async with get_session() as session:
-            user = (await session.execute(
-                select(User)
-                .where(User.id == user_id)
-            )).scalar_one_or_none()
-
-            if user:
-                for key, value in kwargs.items():
-                    setattr(user, key, value)
-
+            result = await session.execute(select(User).where(User.telegram_user_id == user_id))
+            user = result.scalar_one_or_none()
+            if not user:
+                user = User(
+                    telegram_user_id=user_id,
+                    language=event.from_user.language_code or 'en',
+                    username=event.from_user.username or None
+                )
+                session.add(user)
                 await session.commit()
 
-            return user
+            # Cache user data
+            await redis_client.set(f"user:{user_id}", json.dumps(user.to_dict()), ex=3600)
+
+        return user
 
     @staticmethod
-    async def create_user(user_id: int) -> User:
-        """
-        Create user.
+    async def get_user_locale(user_id: int) -> Optional[str]:
+        redis_client = await get_redis()
+        try:
+            locale = await redis_client.get(f"user:{user_id}:language")
+        except aioredis.TimeoutError:
+            locale = None
 
-        :param user_id: Telegram user ID.
-        :return: User.
-        """
+        if locale:
+            return locale.decode('utf-8')
 
         async with get_session() as session:
-            user = User(
-                telegram_user_id=user_id
-            )
+            result = await session.execute(select(User).where(User.telegram_user_id == user_id))
+            user = result.scalar_one_or_none()
+            if user:
+                await redis_client.set(f"user:{user_id}:language", user.language, ex=3600)
+                return user.language
+            else:
+                return None
 
-            session.add(user)
-            await session.commit()
+    @staticmethod
+    async def set_user_locale(user_id: int, locale: str):
+        redis_client = await get_redis()
+        try:
+            await redis_client.set(f"user:{user_id}:language", locale, ex=3600)
+        except aioredis.TimeoutError:
+            pass
 
-            return user
+        try:
+            async with get_session() as session:
+                result = await session.execute(select(User).where(User.telegram_user_id == user_id))
+                user = result.scalar_one_or_none()
+                if user:
+                    user.language = locale
+                    await session.commit()
+        except Exception as e:
+            print(e)
+            pass

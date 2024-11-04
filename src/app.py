@@ -1,11 +1,5 @@
-import asyncio
 import os
-from datetime import datetime, timedelta
 
-from aiogram.dispatcher.middlewares.user_context import UserContextMiddleware
-from sqlalchemy import delete
-
-from src.database import get_session
 from src.middlewares.logging import LoggingMiddleware
 from src.middlewares.user_middleware import UserMiddleware
 from src.utils.localization import setup_i18n
@@ -14,6 +8,7 @@ from aiogram import Dispatcher, Bot, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.dispatcher.middlewares.user_context import UserContextMiddleware
 
 
 async def database_test_connection() -> bool:

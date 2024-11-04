@@ -9,4 +9,6 @@ redis[hiredis]~=5.1.1
 rich~=13.9.2
 apscheduler~=3.10.4
 pydantic~=2.9.2
-pydantic-i18n~=0.4.5
+pillow~=11.0.0
+typing_extensions~=4.12.2
+moviepy~=1.0.3

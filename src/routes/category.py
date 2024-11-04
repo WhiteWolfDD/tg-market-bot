@@ -15,8 +15,9 @@ from src.callbacks.admin_category_action import AdminCategoryActionCallback
 from src.database import get_session
 from src.models import Category
 from src.utils.helpers import escape_markdown
-from src.utils.cache import get_categories, set_categories, get_categories_from_db
+from src.service.category import CategoryService
 from src.utils.log import setup_logging
+from src.utils.states import PostAdStates
 
 logger = setup_logging()
 router = Router()
@@ -57,7 +58,7 @@ async def get_categories_from_state_or_cache(state: FSMContext) -> List[Dict[str
     data = await state.get_data()
     categories = data.get('categories')
     if categories is None:
-        categories = await get_categories()
+        categories = await CategoryService.get_categories()
         await state.update_data(categories=categories)
     return categories
 
@@ -130,7 +131,7 @@ async def show_categories(
     buttons.append([InlineKeyboardButton(text=_('🔍 Search'), callback_data='search_categories')])
     if pagination_buttons:
         buttons.append(pagination_buttons)
-    if is_admin(message_or_query.from_user.id):
+    if parent_id is not None:
         buttons.append([InlineKeyboardButton(text=_('❌ Cancel'), callback_data='cancel_action')])
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
@@ -157,6 +158,8 @@ async def navigate_category(callback_query: CallbackQuery, callback_data: Catego
     :param admin_mode: Whether admin mode is enabled, defaults to False.
     """
     logger.debug(f"navigate_category called by user {callback_query.from_user.id} with data {callback_data}")
+
+    admin_mode = admin_mode or callback_data.admin_mode
 
     categories = await get_categories_from_state_or_cache(state)
     selected_category = next((cat for cat in categories if cat['id'] == callback_data.category_id), None)
@@ -216,9 +219,15 @@ async def handle_user_category_selection(callback_query: CallbackQuery, category
         await show_categories(callback_query, categories, callback_query.from_user.language_code or 'en', state,
                               parent_id=category['id'])
     else:
-        await callback_query.answer(_("You selected the category: {category_name}").format(
-            category_name=get_category_name(category, callback_query.from_user.language_code or 'en')))
-        await state.set_state("category_selected")
+        kbd = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=_('✅ Confirm'), callback_data='confirm_category')],
+            [InlineKeyboardButton(text=_('❌ Cancel'), callback_data='cancel_action')]
+        ])
+        category_name = get_category_name(category, callback_query.from_user.language_code or 'en')
+        await callback_query.message.edit_text(escape_markdown(
+            text=_('You have selected the category: {category_name}\n\n✅ Confirm your selection:').format(
+                category_name=category_name)), reply_markup=kbd)
+        await callback_query.answer()
 
 
 @router.callback_query(AdminCategoryActionCallback.filter())
@@ -256,7 +265,7 @@ async def process_admin_action(callback_query: CallbackQuery, callback_data: Adm
     """
     try:
         await toggle_category_and_children_status(callback_data.category_id)
-        categories = await get_categories_from_db()
+        categories = await CategoryService.get_categories_from_db()
         await state.update_data(categories=categories)
 
         await callback_query.message.edit_text(escape_markdown(_("✅ Category status updated.")))
@@ -279,9 +288,33 @@ async def cancel_last_action(callback_query: CallbackQuery, state: FSMContext) -
     await state.clear()
     await callback_query.answer(_("Action canceled."))
 
-    categories = await get_categories()
+    categories = await CategoryService.get_categories()
     await show_categories(callback_query, categories, callback_query.from_user.language_code or 'en', state,
                           admin_mode=True)
+
+
+@router.callback_query(F.data == 'confirm_category')
+async def confirm_category_selection(callback_query: CallbackQuery, state: FSMContext) -> None:
+    """
+    Confirm the selected category.
+
+    :param callback_query: The callback query.
+    :param state: The FSM context.
+    """
+    logger.debug(f"confirm_category_selection called by user {callback_query.from_user.id}")
+    data = await state.get_data()
+    selected_category = data.get('selected_category')
+    logger.debug(f"Selected category: {selected_category}")
+
+    if not selected_category:
+        await callback_query.answer(_("Please select a category first."))
+        return
+
+    await state.update_data(selected_category=selected_category)
+    await callback_query.message.answer(escape_markdown(
+        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n🚫 Send /cancel to cancel the operation.'))
+    )
+    await state.set_state(PostAdStates.MEDIA)
 
 
 @router.callback_query(F.data == 'search_categories')
@@ -331,7 +364,7 @@ async def paginate_categories(callback_query: CallbackQuery, callback_data: Pagi
     """
     page = callback_data.page
     data = await state.get_data()
-    categories = data.get('categories') or await get_categories()
+    categories = data.get('categories') or await CategoryService.get_categories()
     await state.update_data(categories=categories)
 
     await show_categories(
@@ -361,5 +394,5 @@ async def toggle_category_and_children_status(category_id: int):
         await session.execute(update(Category).where(Category.path.like(f"{category.path}%")).values(status=new_status))
         await session.commit()
 
-    categories = await get_categories_from_db()
-    await set_categories(categories)
+    categories = await CategoryService.get_categories_from_db()
+    await CategoryService.set_categories(categories)

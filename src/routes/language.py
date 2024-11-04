@@ -5,7 +5,7 @@ from aiogram.utils.i18n import gettext as _, get_i18n
 from aiogram.utils.i18n import lazy_gettext as __
 
 from src.routes.home import start
-from src.utils.cache import set_user_locale
+from src.service.user import UserService
 from src.utils.helpers import escape_markdown
 from src.utils.log import setup_logging
 
@@ -45,7 +45,7 @@ async def set_language(message: Message, locale: str, state: FSMContext) -> None
     Установка языка.
     """
     # Сохраняем новый язык пользователя
-    await set_user_locale(user_id=message.from_user.id, locale=locale)
+    await UserService.set_user_locale(user_id=message.from_user.id, locale=locale)
 
     # Устанавливаем новый контекст локализации
     i18n = get_i18n()

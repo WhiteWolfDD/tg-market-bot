@@ -3,7 +3,7 @@ from aiogram.utils.i18n.middleware import I18nMiddleware
 from typing import Any, Dict
 from aiogram.types import TelegramObject, User
 
-from src.utils.cache import get_user_locale
+from src.service.user import UserService
 
 
 def get_i18n():
@@ -16,7 +16,7 @@ class CustomI18nMiddleware(I18nMiddleware):
 
         if user:
             user_id = user.id
-            user_language = await get_user_locale(user_id)
+            user_language = await UserService.get_user_locale(user_id)
             if user_language:
                 return user_language
 

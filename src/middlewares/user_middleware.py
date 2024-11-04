@@ -1,7 +1,7 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 import asyncio
-from src.utils.cache import get_or_create_user
+from src.service.user import UserService
 
 
 class UserMiddleware(BaseMiddleware):
@@ -21,7 +21,7 @@ class UserMiddleware(BaseMiddleware):
 
         if user_id:
             # Run user retrieval in parallel with the handler
-            get_user_task = asyncio.create_task(get_or_create_user(user_id, event))
+            get_user_task = asyncio.create_task(UserService.get_or_create_user(user_id, event))
             result = await handler(event, data)
             await get_user_task
             return result

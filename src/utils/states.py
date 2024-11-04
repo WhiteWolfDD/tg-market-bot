@@ -6,10 +6,6 @@ class PostAdStates(StatesGroup):
     DESCRIPTION = State()
     PRICE = State()
     CATEGORY = State()
+    MEDIA = State()
     LOCATION = State()
-    PHOTOS = State()
-
-
-class CategoryStates(StatesGroup):
-    category_search = State()
-    category_options = State()
+    CONTACT_INFO = State()

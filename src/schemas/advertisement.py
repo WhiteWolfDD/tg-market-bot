@@ -1,5 +1,4 @@
 from pydantic import BaseModel, ValidationError, field_validator, Field
-from pydantic.types import StringConstraints
 from typing_extensions import Annotated, Optional
 from decimal import Decimal
 from aiogram.utils.i18n import gettext as _

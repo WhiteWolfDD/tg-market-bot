@@ -4,7 +4,7 @@ from aiogram.types import Message
 from src.routes.category import show_categories
 from src.routes.exception_logs import render_exception_logs
 from src.routes.statistic import display_statistics
-from src.utils.cache import get_categories
+from src.service.category import CategoryService
 
 
 async def manage_categories(message: Message, state: FSMContext) -> None:
@@ -12,7 +12,7 @@ async def manage_categories(message: Message, state: FSMContext) -> None:
     Category management.
     """
 
-    categories = await get_categories()
+    categories = await CategoryService.get_categories()
     await state.clear()
     await state.update_data(categories=categories)
     user_language = message.from_user.language_code or 'en'

@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from sqlalchemy import select, func
 from src.database import get_session
