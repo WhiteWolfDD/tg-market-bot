@@ -1,6 +1,5 @@
 import os
 
-from src.middlewares.logging import LoggingMiddleware
 from src.middlewares.user_middleware import UserMiddleware
 from src.utils.localization import setup_i18n
 
@@ -39,7 +38,6 @@ class Application:
         self.__dispatcher = Dispatcher(storage=storage)
         self.__dispatcher.update.middleware(UserMiddleware())
         self.__dispatcher.update.middleware(UserContextMiddleware())
-        self.__dispatcher.update.middleware(LoggingMiddleware())
 
         setup_i18n(self.__dispatcher)
 
