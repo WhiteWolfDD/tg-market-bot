@@ -22,7 +22,6 @@ from src.utils.states import PostAdStates
 logger = setup_logging()
 router = Router()
 
-
 def is_admin(user_id: int) -> bool:
     """
     Check if the user is an admin.
@@ -312,7 +311,7 @@ async def confirm_category_selection(callback_query: CallbackQuery, state: FSMCo
 
     await state.update_data(selected_category=selected_category)
     await callback_query.message.answer(escape_markdown(
-        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n🚫 Send /cancel to cancel the operation.'))
+        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n❗️ Limit per one file - *50 MB*\n\n🚫 Send /cancel to cancel the operation.'))
     )
     await state.set_state(PostAdStates.MEDIA)
 
@@ -325,6 +324,7 @@ async def prompt_search(callback_query: CallbackQuery, state: FSMContext) -> Non
     :param callback_query: The callback query.
     :param state: The FSM context.
     """
+
     logger.debug(f"prompt_search called by user {callback_query.from_user.id}")
     await callback_query.message.edit_text(escape_markdown(text=_('Please enter your search query:')),
                                            reply_markup=None)

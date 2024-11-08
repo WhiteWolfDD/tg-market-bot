@@ -8,9 +8,14 @@ from aiogram.types import TelegramObject, Message, CallbackQuery, FSInputFile
 
 from src.callbacks.main import DeleteMessageCallback
 from src.utils.helpers import escape_markdown, build_inline_keyboard
+from src.utils.log import setup_logging
 
+logger = setup_logging()
 
 class ErrorsMiddleware(BaseMiddleware):
+    """
+    Middleware class for handling exceptions and sending logs to the admin.
+    """
     async def __call__(
             self,
             handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
@@ -19,11 +24,12 @@ class ErrorsMiddleware(BaseMiddleware):
     ) -> Any:
         try:
             return await handler(event, data)
-        except Exception:
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
             admins = os.getenv("ADMIN_ID").split(",")
             chat_id = None
 
-            # Определяем chat_id в зависимости от типа события
+            # Get the chat ID from the event
             if isinstance(event, Message):
                 chat_id = event.chat.id
             elif isinstance(event, CallbackQuery):
@@ -56,12 +62,12 @@ class ErrorsMiddleware(BaseMiddleware):
                     reply_markup=build_inline_keyboard(keyboard=kbd).as_markup()
                 )
 
-            # Логируем ошибку
+            # Save the exception log to a file
             filename = f"{int(datetime.now().timestamp())}.log"
-            with open(f"storage/logs/exceptions/{filename}", "w") as file:
+            with open(f"storage/logs/exceptions/{filename}", "w", encoding='utf-8') as file:
                 file.write(traceback.format_exc())
 
-            # Отправляем лог администратору
+            # Send the exception log to the admin
             for admin in admins:
                 msg = (
                     '💥 *A new error has occurred!*\n\n'

@@ -12,10 +12,10 @@ def clean_old_logs():
         return
 
     cutoff_date = datetime.now() - timedelta(days=float(LogsEnums.DAYS_TO_KEEP_LOGS.value))
-    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "r") as file:
+    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "r", encoding='utf-8') as file:
         lines = file.readlines()
 
-    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "w") as file:
+    with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "w", encoding='utf-8') as file:
         for line in lines:
             try:
                 # Parse the date in each log entry
@@ -45,7 +45,7 @@ class LoggingMiddleware(BaseMiddleware):
         date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg = f"[{date}] {event}"
 
-        with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "a") as file:
+        with open(LogsEnums.LOG_FILE_PATH.value + "access.log", "a", encoding='utf-8') as file:
             file.write(msg + "\n")
 
         return await handler(event, data)
