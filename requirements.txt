@@ -1,6 +1,6 @@
 python-dotenv~=1.0.1
 SQLAlchemy~=2.0.35
-aiogram~=3.13.1
+aiogram~=3.14
 babel~=2.16.0
 alembic~=1.13.3
 aiofiles~=24.1.0
@@ -14,3 +14,4 @@ typing_extensions~=4.12.2
 moviepy~=1.0.3
 asyncpg~=0.30.0
 opencv-python~=4.10.0.84
+geopy~=2.4.1

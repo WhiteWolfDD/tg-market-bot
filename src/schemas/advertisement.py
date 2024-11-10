@@ -1,3 +1,5 @@
+import re
+
 from pydantic import BaseModel, ValidationError, field_validator, Field
 from typing_extensions import Annotated, Optional
 from decimal import Decimal
@@ -11,7 +13,6 @@ def translate_validation_error(error: ValidationError) -> str:
     messages = []
     for err in error.errors():
         error_type = err['type']
-
         if error_type == 'string_pattern_mismatch':
             message_template = escape_markdown(_("The {field} should match the pattern '{pattern}'"))
             message = message_template.format(field=err['loc'][0], pattern=err['ctx']['pattern'])
@@ -22,10 +23,12 @@ def translate_validation_error(error: ValidationError) -> str:
                 field=err['loc'][0], limit_value=err['ctx']['gt']
             ))
         else:
-            message = escape_markdown(_("Error: ", _(err['msg'])))
-
+            message = escape_markdown(_("Error: ") + _(err['msg']))
         messages.append(message)
     return "\n".join(messages)
+
+
+VALID_TEXT_PATTERN = re.compile(r'^[\w\s.,!?\'"()\-]+$')
 
 
 class AdvertisementModel(BaseModel):
@@ -45,25 +48,27 @@ class AdvertisementModel(BaseModel):
     description: Optional[Annotated[str, Field(max_length=100)]] = None
     price: Optional[Annotated[Decimal, Field(gt=0, decimal_places=2)]] = None
 
-    # Custom validators with translations
+    @staticmethod
     @field_validator('title')
-    def title_must_be_alphanumeric(cls, v):
+    def title_must_be_valid(v):
         if not v.strip():
             raise ValueError(escape_markdown(_("Title cannot be empty or whitespace-only.")))
-        if not v.isalnum():
-            raise ValueError(escape_markdown(_("Title must be alphanumeric.")))
+        if not AdvertisementModel.VALID_TEXT_PATTERN.match(v):
+            raise ValueError(escape_markdown(_("Title contains invalid characters.")))
         return v
 
+    @staticmethod
     @field_validator('description')
-    def description_must_be_alphanumeric(cls, v):
+    def description_must_be_valid(v):
         if not v.strip():
             raise ValueError(escape_markdown(_("Description cannot be empty or whitespace-only.")))
-        if not v.isalnum():
-            raise ValueError(escape_markdown(_("Description must be alphanumeric.")))
+        if not AdvertisementModel.VALID_TEXT_PATTERN.match(v):
+            raise ValueError(escape_markdown(_("Description contains invalid characters.")))
         return v
 
+    @staticmethod
     @field_validator('price', mode='before')
-    def price_must_be_positive(cls, v):
+    def price_must_be_positive(v):
         if not isinstance(v, Decimal):
             raise ValueError(escape_markdown(_("Price must be a decimal.")))
         if v <= 0:

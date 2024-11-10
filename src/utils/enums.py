@@ -1,21 +1,14 @@
-from enum import Enum
-
-class AdvertisementStatus(str, Enum):
+class AdvertisementStatus:
     PENDING = 'pending'
     APPROVED = 'approved'
     REJECTED = 'rejected'
 
-class UserRole(str, Enum):
+class UserRole:
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
 
-class InteractionType(str, Enum):
-    VIEWED = 'viewed'
-    FAVORITED = 'favorited'
-    SHARED = 'shared'
-
-class LogsEnums(str, Enum):
+class LogsConfig:
     LOGS_PER_PAGE = 9
     LOGS_PER_ROW = 3
     LOG_FILE_PATH = "storage/logs/"

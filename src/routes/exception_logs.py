@@ -8,7 +8,7 @@ from src.callbacks.category import PaginationCallback
 from src.callbacks.exception_logs import ViewExceptionLogCallback, \
     DeleteExceptionLogsCallback, DeleteExceptionLogCallback
 from src.callbacks.main import DeleteMessageCallback
-from src.utils.enums import LogsEnums
+from src.utils.enums import LogsConfig
 from src.utils.helpers import escape_markdown, build_inline_keyboard
 from src.utils.log import setup_logging
 
@@ -24,7 +24,6 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
     :param page: Current page number
     :return:
     """
-    # Путь к папке с логами
     storage_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'storage', 'logs', 'exceptions')
     logs = [log for log in os.listdir(storage_path) if log.endswith('.log')]
     logs.sort(reverse=True)
@@ -44,32 +43,26 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
             )
         return
 
-    # Подсчёт общего количества страниц
-    total_pages = (len(logs) + LogsEnums.LOGS_PER_PAGE.value - 1) // LogsEnums.LOGS_PER_PAGE.value
+    total_pages = (len(logs) + LogsConfig.LOGS_PER_PAGE) - 1 // LogsConfig.LOGS_PER_PAGE
 
-    # Ограничение на номера страниц
     if page < 1:
         page = 1
     if page > total_pages:
         page = total_pages
 
-    # Определение диапазона логов для текущей страницы
-    start = (page - 1) * LogsEnums.LOGS_PER_PAGE.value
-    end = start + LogsEnums.LOGS_PER_PAGE.value
+    start = (page - 1) * LogsConfig.LOGS_PER_PAGE
+    end = start + LogsConfig.LOGS_PER_PAGE
     current_logs = logs[start:end]
 
-    # Подготовка сообщения
     msg = _('📜 *Error logs*.\n\nSelect a log to view.')
 
-    # Формирование кнопок для логов
     buttons = [
         [
             InlineKeyboardButton(text=f'📄 {log}', callback_data=ViewExceptionLogCallback(log=log).pack())
-            for log in current_logs[i:i + LogsEnums.LOGS_PER_ROW.value]
-        ] for i in range(0, len(current_logs), LogsEnums.LOGS_PER_ROW.value)
+            for log in current_logs[i:i + LogsConfig.LOGS_PER_ROW]
+        ] for i in range(0, len(current_logs), LogsConfig.LOGS_PER_ROW)
     ]
 
-    # Кнопки для переключения страниц
     pagination_buttons = []
     if page > 1:
         pagination_buttons.append(InlineKeyboardButton(
@@ -82,7 +75,6 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
             callback_data=PaginationCallback(page=page + 1).pack()
         ))
 
-    # Добавление кнопок удаления всех логов
     buttons.append(
         [InlineKeyboardButton(text=_('🗑 Delete all logs'), callback_data=DeleteExceptionLogsCallback().pack())]
     )
@@ -91,7 +83,6 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
 
-    # Обновляем сообщение
     if isinstance(target, Message):
         await target.answer(
             text=escape_markdown(text=msg),
@@ -114,18 +105,14 @@ async def view_exception_log(query: CallbackQuery, callback_data: ViewExceptionL
     :return:
     """
 
-    # Get log file
     log_file = callback_data.log
 
-    # Get log file path
     file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'storage', 'logs',
                              'exceptions', log_file)
 
-    # Prepare message
     msg = _('📜 *Error log*.\n\n'
             'Log file is attached below.')
 
-    # Send message
     client_message = await query.bot.send_document(
         document=FSInputFile(file_path),
         caption=escape_markdown(text=msg),
@@ -142,7 +129,6 @@ async def view_exception_log(query: CallbackQuery, callback_data: ViewExceptionL
         ]
     }
 
-    # Send message
     await query.bot.edit_message_reply_markup(
         chat_id=client_message.chat.id,
         message_id=client_message.message_id,
@@ -161,7 +147,6 @@ async def delete_exception_logs(query: CallbackQuery) -> None:
     :return:
     """
 
-    # Get all exception logs
     storage_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'storage', 'logs',
                                 'exceptions')
     logs = [log for log in os.listdir(storage_path) if log.endswith('.log')]
@@ -172,15 +157,12 @@ async def delete_exception_logs(query: CallbackQuery) -> None:
         )
         return
 
-    # Delete all logs
     for log in logs:
         file_path = os.path.join(storage_path, log)
         os.remove(file_path)
 
-    # Answer query
     await query.answer()
 
-    # Render exception logs
     await render_exception_logs(query.message)
 
 
@@ -194,10 +176,8 @@ async def delete_exception_log(query: CallbackQuery, callback_data: DeleteExcept
     :return:
     """
 
-    # Get log file
     log_file = callback_data.log
 
-    # Get log file path
     file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'storage', 'logs',
                              'exceptions', log_file)
 
@@ -207,13 +187,10 @@ async def delete_exception_log(query: CallbackQuery, callback_data: DeleteExcept
         )
         return
 
-    # Delete log
     os.remove(file_path)
 
-    # Answer query
     await query.answer()
 
-    # Render exception logs
     await render_exception_logs(query.message)
 
 
@@ -228,5 +205,4 @@ async def paginate_logs(query: CallbackQuery, callback_data: PaginationCallback)
     """
     await query.answer()
 
-    # Render exception logs
     await render_exception_logs(query, page=callback_data.page)

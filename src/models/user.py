@@ -24,7 +24,7 @@ class User(Base):
     role: Mapped[UserRole] = mapped_column(
         String(20),
         nullable=False,
-        default=UserRole.USER.value
+        default=UserRole.USER
     )
     language: Mapped[str] = mapped_column(
         String(2),

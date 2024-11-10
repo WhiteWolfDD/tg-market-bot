@@ -15,3 +15,19 @@ class ShowUserAdsCallback(CallbackData, prefix='show_user_ads'):
     """
 
     page: int = 0
+
+
+class AddMediaCallback(CallbackData, prefix='add_media'):
+    """
+    Add media callback.
+    """
+
+    pass
+
+
+class FinishUploadMediaCallback(CallbackData, prefix='finish_upload'):
+    """
+    Finish upload media callback.
+    """
+
+    pass

@@ -51,7 +51,7 @@ class Advertisement(Base):
     status: Mapped[AdvertisementStatus] = mapped_column(
         String(10),
         nullable=False,
-        default=AdvertisementStatus.PENDING.value,
+        default=AdvertisementStatus.PENDING,
         index=True
     )
     files: Mapped[list[str]] = mapped_column(

@@ -311,7 +311,7 @@ async def confirm_category_selection(callback_query: CallbackQuery, state: FSMCo
 
     await state.update_data(selected_category=selected_category)
     await callback_query.message.answer(escape_markdown(
-        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n❗️ Limit per one file - *50 MB*\n\n🚫 Send /cancel to cancel the operation.'))
+        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n❗️ Limit per one file - *45 MB*\n\n🚫 Send /cancel to cancel the operation.'))
     )
     await state.set_state(PostAdStates.MEDIA)
 
