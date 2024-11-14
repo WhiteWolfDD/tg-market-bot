@@ -31,3 +31,19 @@ class FinishUploadMediaCallback(CallbackData, prefix='finish_upload'):
     """
 
     pass
+
+
+class ConfirmAdCallback(CallbackData, prefix='confirm_ad'):
+    """
+    Confirm ad callback.
+    """
+
+    pass
+
+
+class CancelAdCallback(CallbackData, prefix='cancel_ad'):
+    """
+    Cancel ad callback.
+    """
+
+    pass

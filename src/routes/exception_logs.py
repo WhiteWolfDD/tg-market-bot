@@ -8,7 +8,7 @@ from src.callbacks.category import PaginationCallback
 from src.callbacks.exception_logs import ViewExceptionLogCallback, \
     DeleteExceptionLogsCallback, DeleteExceptionLogCallback
 from src.callbacks.main import DeleteMessageCallback
-from src.utils.enums import LogsConfig
+from src.utils.const import LogsConfig
 from src.utils.helpers import escape_markdown, build_inline_keyboard
 from src.utils.log import setup_logging
 

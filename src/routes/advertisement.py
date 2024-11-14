@@ -1,24 +1,23 @@
 import os
-from decimal import Decimal, InvalidOperation
+import re
 
-import cv2
-from PIL import Image
+from decimal import Decimal, InvalidOperation
 from aiogram import Router, F, Bot
 from aiogram.enums import ChatAction
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton, \
-    KeyboardButton, ReplyKeyboardMarkup, Location, InputMediaPhoto, InputMediaVideo, InputMediaDocument
+    KeyboardButton, ReplyKeyboardMarkup, Location, CallbackQuery
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 from aiogram.utils.media_group import MediaGroupBuilder
 from geopy import Nominatim
-from moviepy.editor import VideoFileClip
 
-from src.callbacks.advertisement import AddMediaCallback, FinishUploadMediaCallback
-from src.schemas.advertisement import AdvertisementModel, ValidationError, translate_validation_error
+from src.callbacks.advertisement import AddMediaCallback, FinishUploadMediaCallback, ConfirmAdCallback, CancelAdCallback
+from src.schemas.advertisement import AdvertisementSchema, ValidationError, translate_validation_error
 from src.routes.category import show_categories
 from src.service.category import CategoryService
+from src.utils.const import StoragePaths
 from src.utils.helpers import escape_markdown
 from src.utils.log import setup_logging
 from src.utils.states import PostAdStates
@@ -92,7 +91,7 @@ async def post_ad_title(message: Message, state: FSMContext) -> None:
     :return: None
     """
 
-    validation_error_handler(AdvertisementModel(title=message.text))
+    validation_error_handler(AdvertisementSchema(title=message.text))
 
     await state.update_data(title=message.text)
     await message.answer(
@@ -112,7 +111,7 @@ async def post_ad_description(message: Message, state: FSMContext) -> None:
     :return: None
     """
 
-    validation_error_handler(AdvertisementModel(description=message.text))
+    validation_error_handler(AdvertisementSchema(description=message.text))
 
     await state.update_data(description=message.text)
     await message.answer(
@@ -133,13 +132,13 @@ async def post_ad_reason(message: Message, state: FSMContext) -> None:
     :return: None
     """
 
-    validation_error_handler(AdvertisementModel(reason=message.text))
+    validation_error_handler(AdvertisementSchema(reason=message.text))
 
     await state.update_data(reason=message.text)
     await message.answer(
         escape_markdown(
             text=_(
-                '📤 *Post an ad*\n\n💵 Send me the *price* of the ad.\n✍️ e.g. 699.99\n\n🚫 Send /cancel to cancel the operation.'))
+                '📤 *Post an ad*\n\n💵 Send me the *price* of the ad in euro.\n✍️ e.g. 699.99\n\n🚫 Send /cancel to cancel the operation.'))
     )
     await state.set_state(PostAdStates.PRICE)
 
@@ -154,7 +153,7 @@ async def post_ad_price(message: Message, state: FSMContext) -> None:
     :return: None
     """
 
-    price = message.text
+    price = re.sub(r'€|euro|eur', '', message.text, flags=re.IGNORECASE)
     try:
         price_decimal = Decimal(price)
         if price_decimal.as_tuple().exponent != -2:
@@ -165,7 +164,7 @@ async def post_ad_price(message: Message, state: FSMContext) -> None:
         )
         return
 
-    validation_error_handler(AdvertisementModel(price=price_decimal))
+    validation_error_handler(AdvertisementSchema(price=price_decimal))
 
     await state.update_data(price=price_decimal)
     user_language = message.from_user.language_code or 'en'
@@ -174,144 +173,140 @@ async def post_ad_price(message: Message, state: FSMContext) -> None:
     await show_categories(message, categories, user_language, state, parent_id=None)
 
 
+async def get_media_info(message: Message):
+    """
+    Get media file information.
+
+    :param message: Message object
+    :return: Tuple
+    """
+    if message.content_type == 'photo':
+        file = message.photo[-1]
+        media_type = 'photo'
+    elif message.content_type == 'video':
+        file = message.video
+        media_type = 'video'
+    elif message.content_type == 'document':
+        file = message.document
+        mime_type = file.mime_type
+        if mime_type.startswith('image/'):
+            media_type = 'photo'
+        elif mime_type.startswith('video/'):
+            media_type = 'video'
+        else:
+            return None, None, None
+    else:
+        return None, None, None
+
+    return file.file_size, file.file_id, media_type
+
+
 @router.message(PostAdStates.MEDIA)
 async def post_ad_media(message: Message, state: FSMContext) -> None:
     """
-    Get the media content (photos/videos) for the ad.
+    Upload media files for the advertisement.
 
     :param message: Message object
     :param state: FSMContext object
     :return: None
     """
+    max_file_size = 45 * 1024 * 1024  # 45 MB
+    file_size, file_id, media_type = await get_media_info(message)
 
-    if (message.content_type == 'photo' and message.photo[-1].file_size > 45 * 1024 * 1024) or \
-            (message.content_type == 'video' and message.video.file_size > 45 * 1024 * 1024) or \
-            (message.content_type == 'document' and message.document.file_size > 45 * 1024 * 1024):
-        await message.answer(escape_markdown(text=_('🚫 The file size must be less than 45 MB.')))
+    if not all([file_size, file_id, media_type]):
+        await message.answer(escape_markdown(_('🚫 Unsupported media type.')))
+        return
+
+    if file_size > max_file_size:
+        await message.answer(escape_markdown(_('🚫 The file size must be less than 45 MB.')))
         return
 
     data = await state.get_data()
     media = data.get('media', [])
 
-    # Check if the user has uploaded 10 or more media files
     if len(media) >= 10:
-        await message.answer(escape_markdown(text=_('🚫 You can only upload up to 10 media files.')))
-        await state.set_state(PostAdStates.LOCATION)
-        await message.answer(escape_markdown(text=_('📍 Send me the *location* of the ad or type it manually.')),
-                             reply_markup=InlineKeyboardMarkup(
-                                 inline_keyboard=[
-                                     [InlineKeyboardButton(text=_('📍 Share Location'), request_location=True)]]
-                             ))
+        await message.answer(escape_markdown(_('🚫 You can only upload up to 10 media files.')))
+        await proceed_to_location_state(message, state)
         return
 
-    # Handle different media types and add them to the media list
-    if message.content_type == 'photo':
-        file_id = message.photo[-1].file_id
-        media.append({'type': 'photo', 'file_id': file_id})
-    elif message.content_type == 'video':
-        file_id = message.video.file_id
-        media.append({'type': 'video', 'file_id': file_id})
-    elif message.content_type == 'document':
-        file_id = message.document.file_id
-        if message.document.mime_type.startswith('image/'):
-            media.append({'type': 'photo', 'file_id': file_id})
-        elif message.document.mime_type.startswith('video/'):
-            media.append({'type': 'video', 'file_id': file_id})
-        else:
-            await message.answer(escape_markdown(text=_('🚫 Unsupported document type.')))
-    else:
-        await message.answer(escape_markdown(text=_('🚫 Unsupported media type.')))
-        return
-
-    # Update state data with new media list
+    media.append({'type': media_type, 'file_id': file_id})
     await state.update_data(media=media)
 
-    # Save media (this can be done async)
     await save_media(message, message.bot)
 
-    # Send a message to user asking if they want to upload more media or finish
     await message.answer(
-        escape_markdown(text=_('📤 File uploaded. Do you want to add another media file?')),
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text=_('➕ Add more'), callback_data=AddMediaCallback().pack())],
-                [InlineKeyboardButton(text=_('✅ Finish'), callback_data=FinishUploadMediaCallback().pack())]
-            ]
-        )
+        escape_markdown(_('📤 File uploaded. Do you want to add another media file?')),
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=_('➕ Add more'), callback_data=AddMediaCallback().pack())],
+            [InlineKeyboardButton(text=_('✅ Finish'), callback_data=FinishUploadMediaCallback().pack())]
+        ])
+    )
+
+
+async def proceed_to_location_state(message: Message, state: FSMContext):
+    """
+    Proceed to the location state.
+
+    :param message: Message object
+    :param state: FSMContext object
+    :return: None
+    """
+    location_button = KeyboardButton(text=_('📍 Share Location'), request_location=True)
+    keyboard = ReplyKeyboardMarkup(keyboard=[[location_button]], resize_keyboard=True)
+
+    await state.set_state(PostAdStates.LOCATION)
+    await message.answer(
+        escape_markdown(_('📍 Send me the *location* of the ad or type it manually.')),
+        reply_markup=keyboard
     )
 
 
 @router.callback_query(AddMediaCallback.filter())
-async def add_media_action(callback_query, state: FSMContext):
+async def add_media_action(callback_query: CallbackQuery, state: FSMContext):
     """
-    Add media action.
+    Add more media files.
 
     :param callback_query: CallbackQuery object
     :param state: FSMContext object
     :return: None
     """
-
     await callback_query.message.answer(
-        escape_markdown(text=_('📤 Send the next media file (photo, video, document).'))
+        escape_markdown(_('📤 Send the next media file (photo, video, document).'))
     )
     await state.set_state(PostAdStates.MEDIA)
     await callback_query.answer()
 
 
 @router.callback_query(FinishUploadMediaCallback.filter())
-async def finish_upload_media_action(callback_query, state: FSMContext):
+async def finish_upload_media_action(callback_query: CallbackQuery, state: FSMContext):
     """
-    Finish upload media action.
+    Finish uploading media files.
 
     :param callback_query: CallbackQuery object
     :param state: FSMContext object
     :return: None
     """
-
-    location_button = KeyboardButton(text=_('📍 Share Location'), request_location=True)
-    keyboard = ReplyKeyboardMarkup(keyboard=[[location_button]], resize_keyboard=True)
-
-    await callback_query.message.answer(
-        escape_markdown(text=_('📍 Send the *location* of the ad or type it manually.')),
-        reply_markup=keyboard
-    )
-    await state.set_state(PostAdStates.LOCATION)
+    await proceed_to_location_state(callback_query.message, state)
     await callback_query.answer()
 
 
-@router.message(PostAdStates.LOCATION, F.content_type == 'location')
+@router.message(PostAdStates.LOCATION)
 async def post_ad_location(message: Message, state: FSMContext) -> None:
     """
-    Get the location of the ad via location sharing.
+    Get the location of the advertisement.
 
     :param message: Message object
     :param state: FSMContext object
     :return: None
     """
-    location = message.location
+    if message.content_type == 'location':
+        location = message.location
+    else:
+        location = message.text
 
     await state.update_data(location=location)
     await message.answer(
-        escape_markdown(text=_('📤 *Post an ad*\n\n📎 Send me the *contact information* of the ad.')),
-        reply_markup=ReplyKeyboardRemove()
-    )
-    await state.set_state(PostAdStates.CONTACT_INFO)
-
-
-@router.message(PostAdStates.LOCATION, F.text)
-async def post_ad_location_text(message: Message, state: FSMContext) -> None:
-    """
-    Get the location of the ad via text input.
-
-    :param message: Message object
-    :param state: FSMContext object
-    :return: None
-    """
-    location_text = message.text
-
-    await state.update_data(location=location_text)
-    await message.answer(
-        escape_markdown(text=_('📤 *Post an ad*\n\n📎 Send me the *contact information* of the ad.')),
+        escape_markdown(_('📎 Send me the *contact information* of the ad.')),
         reply_markup=ReplyKeyboardRemove()
     )
     await state.set_state(PostAdStates.CONTACT_INFO)
@@ -320,259 +315,262 @@ async def post_ad_location_text(message: Message, state: FSMContext) -> None:
 @router.message(PostAdStates.CONTACT_INFO)
 async def post_ad_contact_info(message: Message, state: FSMContext) -> None:
     """
-    Get the contact information of the ad.
+    Get the contact information of the advertisement.
 
     :param message: Message object
     :param state: FSMContext object
     :return: None
     """
     contact_info = message.text
-
-    # Send /done command to finish the post-ad operation
     await state.update_data(contact_info=contact_info)
-    await message.answer(escape_markdown(text=_('📤 *Post an ad*\n\n👍 *Done!*')))
+    await message.answer(escape_markdown(_('📤 *Post an ad*\n\n☕️ *Please wait while I process your ad...*')))
     await finish_post_ad(message, state)
 
 
 async def finish_post_ad(message: Message, state: FSMContext) -> None:
     """
-    Finish the post-ad operation and show the filled form.
+    Finish the post-ad operation.
+    In this function, the advertisement is created via FSMContext and sent to the user.
 
     :param message: Message object
     :param state: FSMContext object
     :return: None
     """
     data = await state.get_data()
-    title = data['title']
-    description = data['description']
-    reason = data['reason']
-    price = data['price']
-    selected_category = data['selected_category']
-    media = data['media']
-    contact_info = data['contact_info']
-    location = data['location']
+    title = data.get('title', '')
+    description = data.get('description', '')
+    reason = data.get('reason', '')
+    price = data.get('price', '')
+    selected_category = data.get('selected_category', {})
+    media = data.get('media', [])
+    contact_info = data.get('contact_info', '')
+    location = data.get('location', '')
 
-    # Load the media files
     media_files = await prepare_media_files(media)
+    hashtags_text = await generate_hashtags(selected_category)
 
-    # Get all parent categories based on the path
-    category_ids = selected_category['path'].split('.')
-    parent_category_translations = []
-    for category_id in category_ids:
-        category = await CategoryService.get_category_by_id(int(category_id))
-        parent_category_translations.extend(category['translations'])
+    location_text = await format_location(location)
 
-    # Generate hashtags based on the parent categories
-    hashtags = [f"#{translation['name'].replace(' ', '_').replace('_&', '')}" for translation in
-                parent_category_translations]
-    hashtags_text = " ".join(hashtags)
-
-    if isinstance(location, Location) and location.latitude and location.longitude:
-        city, county, country = await get_location_info(location.latitude, location.longitude)
-        location = f"{city}, {county}, {country}" if city and county and country else _("Unknown location")
-    else:
-        location = location if isinstance(location, str) else _("Unknown location")
-
-    # Show the filled form
     ad_text = (
         f"*Title:* {title}\n"
         f"*Description:* {description}\n"
         f"*Reason for Selling:* {reason}\n"
-        f"*Price:* {price}\n\n"
+        f"*Price:* {price} €\n\n"
         f"*Contact Information:* {contact_info}\n"
-        f"*Location:* {location}\n\n"
+        f"*Location:* {location_text}\n\n"
         f"{hashtags_text}"
     )
 
-    media_group = MediaGroupBuilder(caption=escape_markdown(ad_text))
+    if media_files:
+        await send_media_group(message, media_files, ad_text)
+    else:
+        await message.answer(escape_markdown(ad_text))
+
+    await confirm_ad_details(message, state)
+
+
+async def confirm_ad_details(message: Message, state: FSMContext):
+    """
+    Confirm the advertisement details.
+
+    :param message: Message object
+    :param state: FSMContext object
+    :return: None
+    """
+    await message.answer(
+        escape_markdown(_('📤 *Post an ad*\n\n👍 *Please confirm the details of your ad.*')),
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=_('✅ Confirm'), callback_data=ConfirmAdCallback().pack())],
+            [InlineKeyboardButton(text=_('🚫 Cancel'), callback_data=CancelAdCallback().pack())]
+        ])
+    )
+
+
+@router.callback_query(ConfirmAdCallback.filter())
+async def confirm_ad_callback(callback_query: CallbackQuery, state: FSMContext):
+    """
+    Confirm the advertisement.
+
+    :param callback_query: CallbackQuery object
+    :param state: FSMContext object
+    :return: None
+    """
+    await callback_query.message.edit_text(
+        escape_markdown(
+            _(
+                '📤 *Post an ad*\n\n'
+                '👍 Your ad has been *successfully submitted for moderation*.\n\n'
+                '🔍 You can check the *status* of your ad through the "My Ads" button in the ReplyKeyboard when you use the /start command.\n\n'
+                '✅ If your ad *passes the moderation*, it will be *posted in the group* and you will be *notified immediately*.\n\n'
+                '❌ If your ad *does not pass* the moderation, *you will be notified* as well.'
+            )
+        )
+    )
+    await state.clear()
+    await callback_query.answer()
+
+
+@router.callback_query(CancelAdCallback.filter())
+async def cancel_ad_callback(callback_query: CallbackQuery, state: FSMContext):
+    """
+    Cancel the advertisement.
+
+    :param callback_query: CallbackQuery object
+    :param state: FSMContext object
+    :return: None
+    """
+    await state.clear()
+    await callback_query.message.edit_text(
+        escape_markdown(
+            _(
+                '🚫 *Ad Submission Canceled*\n\n'
+                'Your ad submission has been *canceled*.\n\n'
+                'To submit a new ad, please start the process again by selecting the "📤 Post an ad" button in the main menu.\n\n'
+                'We look forward to seeing your ad soon! 😊'
+            )
+        )
+    )
+    await callback_query.answer()
+
+
+async def generate_hashtags(selected_category):
+    """
+    Generate hashtags for the advertisement.
+
+    :param selected_category: Dict
+    :return: str
+    """
+    category_ids = [int(cid) for cid in selected_category.get('path', '').split('.') if cid]
+    hashtags = []
+
+    for category_id in category_ids:
+        category = await CategoryService.get_category_by_id(category_id)
+        for translation in category.get('translations', []):
+            hashtag = f"#{translation['name'].replace(' ', '_').replace('&', '')}"
+            hashtags.append(hashtag)
+
+    return " ".join(hashtags)
+
+
+async def format_location(location):
+    """
+    Format the location.
+
+    :param location: Location object or str
+    :return: str
+    """
+    if isinstance(location, Location):
+        city, county, country = await get_location_info(location.latitude, location.longitude)
+        return f"{city}, {county}, {country}" if all([city, county, country]) else _("Unknown location")
+    elif isinstance(location, str):
+        return location
+    else:
+        return _("Unknown location")
+
+
+async def send_media_group(message: Message, media_files: list, caption: str):
+    """
+    Send the media group to the user.
+
+    :param message: Message object
+    :param media_files: List
+    :param caption: str
+    :return: None
+    """
+    media_group = MediaGroupBuilder(caption=escape_markdown(caption))
 
     for media_file in media_files:
-        file_path = media_file['file']
-        media_type = media_file['type']
+        if media_file['type'] == 'photo':
+            media_group.add_photo(media=media_file['file'])
+        elif media_file['type'] == 'video':
+            media_group.add_video(media=media_file['file'])
 
-        if media_type == 'photo':
-            media_group.add_photo(media=file_path)
-        elif media_type == 'video':
-            media_group.add_video(media=file_path)
-
-    # Send the media group if there are photos/videos, otherwise send the text
-    if media_group is not None:
-        try:
-            await message.answer_media_group(media=media_group.build())
-        except Exception as e:
-            logger.error(f"Error sending media group: {e}")
-            await message.answer(escape_markdown(text=ad_text))
-    else:
-        await message.answer(escape_markdown(text=ad_text))
+    try:
+        await message.answer_media_group(media=media_group.build())
+    except Exception as e:
+        logger.error(f"Error sending media group: {e}")
+        await message.answer(escape_markdown(caption))
 
 
-async def save_media(message: Message, bot: Bot, media_folder="storage/media"):
+async def save_media(message: Message, bot: Bot):
     """
-    Save the media content (photos/videos) to the media folder with compression.
+    Save the media file to the server storage.
 
     :param message: Message object
     :param bot: Bot object
-    :param media_folder: The media folder path
     :return: None
     """
-    os.makedirs(f"{media_folder}/images", exist_ok=True)
-    os.makedirs(f"{media_folder}/video", exist_ok=True)
-    os.makedirs(f"{media_folder}/documents", exist_ok=True)
+    os.makedirs(StoragePaths.PHOTO_PATH, exist_ok=True)
+    os.makedirs(StoragePaths.VIDEO_PATH, exist_ok=True)
 
-    if message.content_type == "photo":
-        file_id = message.photo[-1].file_id
-        file = await bot.get_file(file_id)
-        file_path = f"{media_folder}/images/{file_id}.jpg"
-        await bot.download_file(file.file_path, file_path)
-        compress_image(file_path, file_path)
+    file_size, file_id, media_type = await get_media_info(message)
+    if not all([file_size, file_id, media_type]):
+        return
 
-    elif message.content_type == "video":
-        file_id = message.video.file_id
-        file = await bot.get_file(file_id)
-        file_path = f"{media_folder}/video/{file_id}.mp4"
-        await bot.download_file(file.file_path, file_path)
-
+    if media_type == 'photo':
+        file_path = os.path.join(StoragePaths.PHOTO_PATH, f"{file_id}.jpg")
+    elif media_type == 'video':
+        file_path = os.path.join(StoragePaths.VIDEO_PATH, f"{file_id}.mp4")
         await message.answer(escape_markdown(_("📤 Video is being uploaded to the server...")))
         await bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_VIDEO)
-        compress_video(file_path, file_path)
+    else:
+        return
+
+    file = await bot.get_file(file_id)
+    await bot.download_file(file.file_path, file_path)
+    if media_type == 'video':
         await message.answer(escape_markdown(_("✅ Video has been successfully uploaded to the server.")))
-
-
-    elif message.content_type == "document":
-        file_id = message.document.file_id
-        file = await bot.get_file(file_id)
-        file_extension = os.path.splitext(file.file_path)[1].lower()
-        file_path = None
-        if file_extension in [".jpg", ".jpeg", ".png"]:
-            file_path = f"{media_folder}/images/{file_id}.jpg"
-        elif file_extension in [".mp4", ".mov", ".avi"]:
-            file_path = f"{media_folder}/video/{file_id}.mp4"
-        await bot.download_file(file.file_path, file_path)
-
-        # Compress the image or video
-        if file_extension in [".jpg", ".jpeg", ".png"]:
-            compress_image(file_path, file_path)
-        elif file_extension in [".mp4", ".mov", ".avi"]:
-            await message.answer(escape_markdown(_("📤 Video is being uploaded to the server...")))
-            await bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_VIDEO)
-            compress_video(file_path, file_path)
-            await message.answer(escape_markdown(_("✅ Video has been successfully uploaded to the server.")))
-        else:
-            await message.answer(escape_markdown(_("🚫 Unsupported file type.")))
-
-
-def compress_image(input_path, output_path, max_size=(1920, 1080)):
-    """
-    Compress and resize the image with Pillow.
-
-    :param input_path: Input image file path
-    :param output_path: Output image file path
-    :param max_size: Maximum resolution
-    :return: None
-    """
-    with Image.open(input_path) as img:
-        img.thumbnail(max_size, Image.Resampling.LANCZOS)
-        img.save(output_path, "JPEG")
-
-
-def preprocess_video(input_path, output_path):
-    """
-    Preprocess the video with OpenCV.
-    Without this step, the video will have a problem with the resampling.
-
-    :param input_path: Input video file path
-    :param output_path: Output video file path
-    :return: None
-    """
-    cap = cv2.VideoCapture(input_path)
-    fourcc = cv2.VideoWriter.fourcc(*'XVID')
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = cap.get(cv2.CAP_PROP_FPS)
-
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        out.write(frame)
-
-    cap.release()
-    out.release()
-
-
-def compress_video(input_path, output_path, bitrate="2000k"):
-    """
-    Compress and resize the video with MoviePy.
-
-    Because of the resampling issue with moviepy, we use opencv-python for video processing.
-    Remember to install opencv-python: `pip install opencv-python`.
-
-    :param input_path: Input video file path
-    :param output_path: Output video file path
-    :param bitrate: Bitrate
-    :return: None
-    """
-    preprocess_video(input_path, "temp_video.mp4")
-    with VideoFileClip("temp_video.mp4") as clip:
-        clip.write_videofile(output_path, bitrate=bitrate, codec="libx264", audio_codec="aac", preset="slow",
-                             temp_audiofile="temp-audio.m4a", remove_temp=True)
 
 
 async def load_media(file_path):
     """
-    Load the media content (photos/videos) from the media folder.
+    Load the media file from the server storage.
 
-    :param file_path: The path of the media files
-    :return: The media file as FSInputFile
+    :param file_path: str
+    :return: FSInputFile object
     """
     return FSInputFile(file_path)
 
 
 async def get_location_info(latitude, longitude):
     """
-    Get the location information based on the latitude and longitude from the geolocation API.
+    Get the location information based on the latitude and longitude.
 
-    :param latitude: Latitude
-    :param longitude: Longitude
-    :return: City, County, Country
+    :param latitude: The latitude of the location
+    :param longitude: The longitude of the location
+    :return: Tuple
     """
     geolocator = Nominatim(user_agent="advertisement_bot")
-
-    # Get the location information
     location = geolocator.reverse((latitude, longitude))
-
     if location:
         address = location.raw.get('address', {})
-
-        city = address.get('city', '')
-        county = address.get('county', '')
+        city = address.get('city', address.get('town', address.get('village', '')))
+        county = address.get('county', address.get('state', ''))
         country = address.get('country', '')
 
         return city, county, country
-    else:
-        return None, None, None
+    return None, None, None
 
 
 async def prepare_media_files(media: list) -> list:
     """
-    Check the media files and prepare them for the advertisement.
+    Prepare media files for sending to the user.
 
-    :param media: Media files list
-    :return: Prepared media files with their types
+    :param media: List
+    :return: List
     """
     media_files = []
-
     for item in media:
-        if item['type'] == 'photo':
-            media_path = f"storage/media/images/{item['file_id']}.jpg"
-        elif item['type'] == 'video':
-            media_path = f"storage/media/video/{item['file_id']}.mp4"
+        media_type = item['type']
+        file_id = item['file_id']
+        if media_type == 'photo':
+            media_path = os.path.join(StoragePaths.PHOTO_PATH, f"{file_id}.jpg")
+        elif media_type == 'video':
+            media_path = os.path.join(StoragePaths.VIDEO_PATH, f"{file_id}.mp4")
         else:
             continue
 
-        media_file = await load_media(media_path)
-        media_files.append({'file': media_file, 'type': item['type']})
-
+        if os.path.exists(media_path):
+            media_file = await load_media(media_path)
+            media_files.append({'file': media_file, 'type': media_type})
     return media_files

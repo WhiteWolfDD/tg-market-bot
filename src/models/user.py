@@ -2,7 +2,7 @@ from sqlalchemy import BigInteger, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from datetime import datetime
-from src.utils.enums import UserRole
+from src.utils.const import UserRole
 
 class User(Base):
     __tablename__ = "users"

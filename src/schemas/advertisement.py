@@ -31,21 +31,23 @@ def translate_validation_error(error: ValidationError) -> str:
 VALID_TEXT_PATTERN = re.compile(r'^[\w\s.,!?\'"()\-]+$')
 
 
-class AdvertisementModel(BaseModel):
+class AdvertisementSchema(BaseModel):
     """
-    Advertisement model.
+    Advertisement pydantic schema.
 
     :param title: Title of the advertisement
     :param description: Description of the advertisement
+    :param reason: Reason for the advertisement
     :param price: Price of the advertisement
 
     :raises ValidationError: If the input data is invalid
 
-    :return: AdvertisementModel object
+    :return: AdvertisementSchema object
     """
 
     title: Optional[Annotated[str, Field(max_length=100)]] = None
-    description: Optional[Annotated[str, Field(max_length=100)]] = None
+    description: Optional[Annotated[str, Field(max_length=1000)]] = None
+    reason: Optional[Annotated[str, Field(max_length=1000)]] = None
     price: Optional[Annotated[Decimal, Field(gt=0, decimal_places=2)]] = None
 
     @staticmethod
@@ -53,7 +55,7 @@ class AdvertisementModel(BaseModel):
     def title_must_be_valid(v):
         if not v.strip():
             raise ValueError(escape_markdown(_("Title cannot be empty or whitespace-only.")))
-        if not AdvertisementModel.VALID_TEXT_PATTERN.match(v):
+        if not AdvertisementSchema.VALID_TEXT_PATTERN.match(v):
             raise ValueError(escape_markdown(_("Title contains invalid characters.")))
         return v
 
@@ -62,8 +64,17 @@ class AdvertisementModel(BaseModel):
     def description_must_be_valid(v):
         if not v.strip():
             raise ValueError(escape_markdown(_("Description cannot be empty or whitespace-only.")))
-        if not AdvertisementModel.VALID_TEXT_PATTERN.match(v):
+        if not AdvertisementSchema.VALID_TEXT_PATTERN.match(v):
             raise ValueError(escape_markdown(_("Description contains invalid characters.")))
+        return v
+
+    @staticmethod
+    @field_validator('reason')
+    def reason_must_be_valid(v):
+        if not v.strip():
+            raise ValueError(escape_markdown(_("Reason cannot be empty or whitespace-only.")))
+        if not AdvertisementSchema.VALID_TEXT_PATTERN.match(v):
+            raise ValueError(escape_markdown(_("Reason contains invalid characters.")))
         return v
 
     @staticmethod

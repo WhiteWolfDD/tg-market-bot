@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from aiogram import BaseMiddleware
 
-from src.utils.enums import LogsConfig
+from src.utils.const import LogsConfig
 
 
 def clean_old_logs():

@@ -5,7 +5,7 @@ from sqlalchemy import Numeric, String, ARRAY, ForeignKey, func, CheckConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from src.database import Base
-from src.utils.enums import AdvertisementStatus
+from src.utils.const import AdvertisementStatus
 
 
 class Advertisement(Base):
@@ -37,6 +37,10 @@ class Advertisement(Base):
         nullable=False
     )
     description: Mapped[str] = mapped_column(
+        String(1000),
+        nullable=False
+    )
+    reason: Mapped[str] = mapped_column(
         String(1000),
         nullable=False
     )
