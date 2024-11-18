@@ -6,7 +6,3 @@ class CategoryCallback(CallbackData, prefix="category"):
     action: str
     parent_id: int | None = None
     admin_mode: bool = False
-
-
-class PaginationCallback(CallbackData, prefix="paginate"):
-    page: int

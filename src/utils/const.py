@@ -3,6 +3,9 @@ class AdvertisementStatus:
     APPROVED = 'approved'
     REJECTED = 'rejected'
 
+class AdvertisementConfig:
+    MAX_FILE_SIZE = 45 * 1024 * 1024  # 45 MB
+
 class UserRole:
     USER = 'user'
     ADMIN = 'admin'

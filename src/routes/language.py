@@ -5,7 +5,7 @@ from aiogram.utils.i18n import gettext as _, get_i18n
 from aiogram.utils.i18n import lazy_gettext as __
 
 from src.routes.home import start
-from src.service.user import UserService
+from src.services.user import UserService
 from src.utils.helpers import escape_markdown
 from src.utils.log import setup_logging
 

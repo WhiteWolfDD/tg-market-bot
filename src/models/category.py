@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy import Integer, String, ForeignKey, Boolean, Index
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from src.database import Base
@@ -10,11 +12,27 @@ class Category(Base):
         Index('idx_categories_path', 'path'),
     )
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    emoji: Mapped[str] = mapped_column(String(10), nullable=False)
-    parent_id: Mapped[int | None] = mapped_column(Integer, ForeignKey('categories.id'), nullable=True)
-    status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    path: Mapped[str] = mapped_column(String, nullable=False, default='')
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True
+    )
+    emoji: Mapped[str] = mapped_column(
+        String(10), nullable=False
+    )
+    parent_id: Mapped[Optional[int]] = mapped_column(
+        Integer,
+        ForeignKey('categories.id'),
+        nullable=True
+    )
+    status: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True
+    )
+    path: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+        default=''
+    )
 
     parent = relationship('Category', remote_side=[id], backref='children')
     translations = relationship('CategoryTranslation', back_populates='category', cascade='all, delete-orphan')

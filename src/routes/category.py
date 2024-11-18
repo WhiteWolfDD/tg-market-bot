@@ -10,12 +10,12 @@ from aiogram.utils.i18n import gettext as _
 from sqlalchemy import select, update
 
 from src.callbacks.category import CategoryCallback
-from src.callbacks.pagination import PaginationCallback
-from src.callbacks.admin_category_action import AdminCategoryActionCallback
+from src.callbacks.pagination import CategoryPaginationCallback
+from src.callbacks.admin import AdminCategoryActionCallback
 from src.database import get_session
 from src.models import Category
 from src.utils.helpers import escape_markdown
-from src.service.category import CategoryService
+from src.services.category import CategoryService
 from src.utils.log import setup_logging
 from src.utils.states import PostAdStates
 
@@ -122,10 +122,10 @@ async def show_categories(
     pagination_buttons = []
     if page > 1:
         pagination_buttons.append(
-            InlineKeyboardButton(text=_('⬅️ Back'), callback_data=PaginationCallback(page=page - 1).pack()))
+            InlineKeyboardButton(text=_('⬅️ Back'), callback_data=CategoryPaginationCallback(page=page - 1).pack()))
     if page < total_pages:
         pagination_buttons.append(
-            InlineKeyboardButton(text=_('➡️ Forward'), callback_data=PaginationCallback(page=page + 1).pack()))
+            InlineKeyboardButton(text=_('➡️ Forward'), callback_data=CategoryPaginationCallback(page=page + 1).pack()))
 
     buttons.append([InlineKeyboardButton(text=_('🔍 Search'), callback_data='search_categories')])
     if pagination_buttons:
@@ -352,8 +352,8 @@ async def search_categories(message: Message, state: FSMContext) -> None:
     await state.set_state(None)
 
 
-@router.callback_query(PaginationCallback.filter())
-async def paginate_categories(callback_query: CallbackQuery, callback_data: PaginationCallback,
+@router.callback_query(CategoryPaginationCallback.filter())
+async def paginate_categories(callback_query: CallbackQuery, callback_data: CategoryPaginationCallback,
                               state: FSMContext) -> None:
     """
     Handle pagination of categories.

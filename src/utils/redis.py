@@ -18,7 +18,18 @@ class RedisCache(metaclass=SingletonMeta):
     async def get_client(self):
         return self._client
 
+    @property
+    def client(self):
+        return self._client
+
 
 async def get_redis() -> aioredis.Redis:
+    redis_cache = RedisCache()
+    return await redis_cache.get_client()
+
+
+async def reload_redis_cache() -> aioredis.Redis:
+    redis_cache = RedisCache()
+    redis_cache.get_client().close()
     redis_cache = RedisCache()
     return await redis_cache.get_client()

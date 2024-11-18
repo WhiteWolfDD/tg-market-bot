@@ -12,10 +12,12 @@ from src.utils.log import setup_logging
 
 logger = setup_logging()
 
+
 class ErrorsMiddleware(BaseMiddleware):
     """
     Middleware class for handling exceptions and sending logs to the admin.
     """
+
     async def __call__(
             self,
             handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -49,6 +51,10 @@ class Advertisement(Base):
         nullable=False
     )
     location: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+    contact_info: Mapped[str] = mapped_column(
         String(100),
         nullable=False
     )
@@ -57,10 +63,6 @@ class Advertisement(Base):
         nullable=False,
         default=AdvertisementStatus.PENDING,
         index=True
-    )
-    files: Mapped[list[str]] = mapped_column(
-        ARRAY(String),
-        nullable=True
     )
     hashtags: Mapped[list[str]] = mapped_column(
         ARRAY(String),
@@ -75,10 +77,6 @@ class Advertisement(Base):
         server_default=func.now(),
         onupdate=func.now()
     )
-    deleted_at: Mapped[datetime] = mapped_column(
-        nullable=True,
-        index=True
-    )
 
     # Relationships
     user_advertisement_links = relationship(
@@ -87,7 +85,30 @@ class Advertisement(Base):
         cascade="save-update, merge, delete"
     )
 
+    media_files = relationship(
+        "MediaFile",
+        back_populates="advertisement",
+        cascade="save-update, merge, delete"
+    )
+
     # Constraints
     __table_args__ = (
         CheckConstraint('price >= 0', name='check_price_positive'),
     )
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'owner_id': self.owner_id,
+            'category_id': self.category_id,
+            'title': self.title,
+            'description': self.description,
+            'reason': self.reason,
+            'price': str(self.price),
+            'location': self.location,
+            'contact_info': self.contact_info,
+            'status': self.status,
+            'hashtags': self.hashtags,
+            'created_at': self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at,
+            'updated_at': self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
+        }

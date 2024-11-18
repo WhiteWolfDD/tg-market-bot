@@ -38,6 +38,7 @@ class AdvertisementRequest(Base):
         func.now(),
         nullable=False
     )
+
     __table_args__ = (
         CheckConstraint("price >= 0", name="check_price_positive"),
     )

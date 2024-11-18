@@ -11,11 +11,20 @@ from src.utils.redis import get_redis
 
 class CategoryService:
     """
-    Category service.
+    Category services.
     """
 
     @staticmethod
     async def get_category_by_id(category_id: int):
+        redis_client = await get_redis()
+        try:
+            category = await redis_client.get(f"category:{category_id}")
+        except aioredis.TimeoutError:
+            category = None
+
+        if category:
+            return json.loads(category)
+
         async with get_session() as session:
             result = await session.execute(
                 select(Category).options(
@@ -26,7 +35,7 @@ class CategoryService:
             category = result.unique().scalar_one_or_none()
 
             if category:
-                return {
+                category_dict = {
                     'id': category.id,
                     'emoji': category.emoji,
                     'parent_id': category.parent_id,
@@ -37,6 +46,9 @@ class CategoryService:
                         for trans in category.translations
                     ]
                 }
+
+                await redis_client.set(f"category:{category_id}", json.dumps(category_dict), ex=3600)
+                return category_dict
 
     @staticmethod
     async def get_categories(force_db=False):

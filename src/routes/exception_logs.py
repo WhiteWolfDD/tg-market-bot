@@ -4,7 +4,7 @@ from aiogram import Router
 from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
 
-from src.callbacks.category import PaginationCallback
+from src.callbacks.pagination import ExceptionPaginationCallback
 from src.callbacks.exception_logs import ViewExceptionLogCallback, \
     DeleteExceptionLogsCallback, DeleteExceptionLogCallback
 from src.callbacks.main import DeleteMessageCallback
@@ -67,12 +67,12 @@ async def render_exception_logs(target: Message | CallbackQuery, page: int = 1) 
     if page > 1:
         pagination_buttons.append(InlineKeyboardButton(
             text=_('⬅️ Previous'),
-            callback_data=PaginationCallback(page=page - 1).pack()
+            callback_data=ExceptionPaginationCallback(page=page - 1).pack()
         ))
     if page < total_pages:
         pagination_buttons.append(InlineKeyboardButton(
             text=_('➡️ Next'),
-            callback_data=PaginationCallback(page=page + 1).pack()
+            callback_data=ExceptionPaginationCallback(page=page + 1).pack()
         ))
 
     buttons.append(
@@ -194,8 +194,8 @@ async def delete_exception_log(query: CallbackQuery, callback_data: DeleteExcept
     await render_exception_logs(query.message)
 
 
-@router.callback_query(PaginationCallback.filter())
-async def paginate_logs(query: CallbackQuery, callback_data: PaginationCallback) -> None:
+@router.callback_query(ExceptionPaginationCallback.filter())
+async def paginate_logs(query: CallbackQuery, callback_data: ExceptionPaginationCallback) -> None:
     """
     Handle pagination for logs.
 

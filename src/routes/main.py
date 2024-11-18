@@ -3,24 +3,12 @@ from aiogram import Router
 from src.callbacks.main import EmptyCallback, DeleteMessageCallback
 
 # Import routers.
-from src.routes.home import router as home_router
-from src.routes.faq import router as faq_router
-from src.routes.advertisement import router as advertisement_router
-from src.routes.category import router as category_router
-from src.routes.language import router as language_router
-from src.routes.exception_logs import router as exception_logs_router
-from src.routes.statistic import router as statistic_router
+from src.routes import routers
 
 router = Router()
 
-# Apply routers.
-router.include_routers(home_router)
-router.include_routers(faq_router)
-router.include_routers(advertisement_router)
-router.include_routers(category_router)
-router.include_routers(language_router)
-router.include_routers(exception_logs_router)
-router.include_routers(statistic_router)
+for r in routers:
+    router.include_router(r)
 
 
 @router.callback_query(EmptyCallback.filter())

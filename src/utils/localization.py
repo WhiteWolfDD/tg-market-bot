@@ -3,7 +3,7 @@ from aiogram.utils.i18n.middleware import I18nMiddleware
 from typing import Any, Dict
 from aiogram.types import TelegramObject, User
 
-from src.service.user import UserService
+from src.services.user import UserService
 
 
 def get_i18n():

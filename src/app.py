@@ -1,4 +1,5 @@
 import os
+import asyncio
 
 from src.middlewares.user_middleware import UserMiddleware
 from src.utils.localization import setup_i18n
@@ -8,6 +9,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.dispatcher.middlewares.user_context import UserContextMiddleware
+from aiogram.exceptions import TelegramNetworkError
 
 
 async def database_test_connection() -> bool:
@@ -54,7 +56,7 @@ class Application:
         """
         Include the router.
         """
-        from src.routes import router
+        from src.routes.main import router
 
         self.__dispatcher.include_router(router)
         return router
@@ -68,9 +70,21 @@ class Application:
             return
 
         await self.__bot.delete_webhook(drop_pending_updates=True)
-        await self.__dispatcher.start_polling(
-            self.__bot
-        )
+
+        retry_delay = 1  # Initial delay in seconds
+        max_delay = 60  # Maximum delay in seconds
+
+        while True:
+            try:
+                await self.__dispatcher.start_polling(self.__bot)
+            except TelegramNetworkError as e:
+                print(f"Network error: {e}. Retrying in {retry_delay} seconds...")
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, max_delay)  # Exponential backoff
+            except Exception as e:
+                print(f"Unexpected error: {e}. Retrying in {retry_delay} seconds...")
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, max_delay)  # Exponential backoff
 
     def __init_exception_handler(self) -> None:
         """
