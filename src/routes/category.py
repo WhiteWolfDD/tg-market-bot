@@ -3,24 +3,23 @@ import os
 import math
 from typing import List, Dict, Any
 
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
-from sqlalchemy import select, update
 
-from src.callbacks.category import CategoryCallback
+from src.callbacks.category import CategoryCallback, SearchCategoryCallback, ConfirmCategorySelectionCallback
+from src.callbacks.main import CancelActionCallback
 from src.callbacks.pagination import CategoryPaginationCallback
 from src.callbacks.admin import AdminCategoryActionCallback
-from src.database import get_session
-from src.models import Category
-from src.utils.helpers import escape_markdown
+from src.utils.helpers import escape_markdown, build_inline_keyboard
 from src.services.category import CategoryService
 from src.utils.log import setup_logging
 from src.utils.states import PostAdStates
 
 logger = setup_logging()
 router = Router()
+
 
 def is_admin(user_id: int) -> bool:
     """
@@ -29,7 +28,10 @@ def is_admin(user_id: int) -> bool:
     :param user_id: The ID of the user.
     :return: True if the user is an admin, False otherwise.
     """
-    return str(user_id) == os.getenv('ADMIN_ID')
+    admins = os.getenv('ADMIN_ID').split(',')
+    is_user_admin = str(user_id) == admins
+    logger.debug(f"Checking if user {user_id} is admin: {is_user_admin}")
+    return is_user_admin
 
 
 def get_category_name(category: Dict[str, Any], language_code: str) -> str:
@@ -86,7 +88,7 @@ async def show_categories(
     :param page: The current page number, defaults to 1.
     :param page_size: The number of categories per page, defaults to 30.
     """
-    logger.debug(f"show_categories called with parent_id={parent_id}, search_query={search_query}, page={page}")
+    logger.debug(f"show_categories called with parent_id={parent_id}, search_query={search_query}, page={page}, admin_mode={admin_mode}")
 
     if not categories:
         await message_or_query.answer(escape_markdown(_("No categories found.")))
@@ -94,54 +96,78 @@ async def show_categories(
 
     await state.update_data(parent_id=parent_id)
 
-    filtered_categories = [
-        category for category in categories
-        if (search_query and any(
-            search_query.lower() in t['name'].lower()
-            for t in category['translations']
-            if t['language_code'] == user_language
-        )) or (category['parent_id'] == parent_id)
-    ]
+    if search_query:
+        filtered_categories = [
+            category for category in categories
+            if any(
+                search_query.lower() in t['name'].lower()
+                for t in category['translations']
+                if t['language_code'] == user_language
+            )
+        ]
+    else:
+        filtered_categories = [
+            category for category in categories
+            if category['parent_id'] == parent_id
+        ]
+
+    # Check if the user is an admin
+    user_id = message_or_query.from_user.id if isinstance(message_or_query, CallbackQuery) else message_or_query.chat.id
+    is_user_admin = is_admin(user_id)
+
+    if is_user_admin and admin_mode:
+        # Admin: show all categories
+        display_categories = filtered_categories[(page - 1) * page_size: page * page_size]
+        logger.debug(f"Admin mode: Displaying all categories. Total: {len(display_categories)}")
+    else:
+        # User: show only active categories
+        paginated_categories = filtered_categories[(page - 1) * page_size: page * page_size]
+        display_categories = [
+            category for category in paginated_categories
+            if category.get('status', True)
+        ]
+        logger.debug(f"User mode: Displaying active categories. Total: {len(display_categories)}")
 
     total_pages = math.ceil(len(filtered_categories) / page_size)
-    paginated_categories = filtered_categories[(page - 1) * page_size: page * page_size]
 
-    buttons = [
-        [InlineKeyboardButton(
-            text=f"{('🟢' if category.get('status', True) else '🔴') if admin_mode else ''} {category['emoji']} {get_category_name(category, user_language)}",
-            callback_data=CategoryCallback(
-                category_id=category['id'],
-                action='navigate',
-                parent_id=category['parent_id'],
-                admin_mode=admin_mode
-            ).pack()
-        )] for category in paginated_categories if
-        is_admin(message_or_query.from_user.id) and admin_mode or category.get('status', True)
-    ]
+    kbd = build_inline_keyboard(
+        keyboard={
+            'inline_kbd': [
+                [
+                    {
+                        'text': f"{('🟢' if category.get('status', True) else '🔴') if admin_mode else ''} "
+                                f"{category['emoji']} {get_category_name(category, user_language)}",
+                        'callback_data': CategoryCallback(
+                            category_id=category['id'],
+                            action='navigate',
+                            parent_id=category['parent_id'],
+                            admin_mode=admin_mode
+                        ).pack()
+                    }
+                ] for category in display_categories
+            ] + [
+                [
+                    {
+                        'text': _('🔍 Search categories'),
+                        'callback_data': SearchCategoryCallback().pack()
+                    }
+                ]
+            ]
+        },
+        back_cb=CancelActionCallback().pack() if parent_id is not None else None,
+        prev_page_cb=CategoryPaginationCallback(page=page - 1).pack() if page > 1 else None,
+        next_page_cb=CategoryPaginationCallback(page=page + 1).pack() if page < total_pages else None,
+        request_location=False
+    )
 
-    pagination_buttons = []
-    if page > 1:
-        pagination_buttons.append(
-            InlineKeyboardButton(text=_('⬅️ Back'), callback_data=CategoryPaginationCallback(page=page - 1).pack()))
-    if page < total_pages:
-        pagination_buttons.append(
-            InlineKeyboardButton(text=_('➡️ Forward'), callback_data=CategoryPaginationCallback(page=page + 1).pack()))
-
-    buttons.append([InlineKeyboardButton(text=_('🔍 Search'), callback_data='search_categories')])
-    if pagination_buttons:
-        buttons.append(pagination_buttons)
-    if parent_id is not None:
-        buttons.append([InlineKeyboardButton(text=_('❌ Cancel'), callback_data='cancel_action')])
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     category_text = escape_markdown(_("Please select a category:"))
     if search_query:
         category_text += f" '{search_query}'"
 
     if isinstance(message_or_query, Message):
-        await message_or_query.answer(escape_markdown(text=category_text), reply_markup=keyboard)
+        await message_or_query.answer(escape_markdown(text=category_text), reply_markup=kbd.as_markup())
     elif isinstance(message_or_query, CallbackQuery):
-        await message_or_query.message.edit_text(escape_markdown(text=category_text), reply_markup=keyboard)
+        await message_or_query.message.edit_text(escape_markdown(text=category_text), reply_markup=kbd.as_markup())
         await message_or_query.answer()
 
 
@@ -186,10 +212,12 @@ async def handle_admin_category_selection(callback_query: CallbackQuery, categor
         [InlineKeyboardButton(text=escape_markdown(_('➡️ Go to child categories')),
                               callback_data=AdminCategoryActionCallback(category_id=category['id'],
                                                                         action='go_to_children').pack())] if child_categories else [],
+        [InlineKeyboardButton(text=escape_markdown(_('✅ Confirm category (Don\'t use in Category Edit)'),),
+                              callback_data=ConfirmCategorySelectionCallback().pack())] if not child_categories else [],
         [InlineKeyboardButton(text=escape_markdown(_('🔄 Toggle category status')),
                               callback_data=AdminCategoryActionCallback(category_id=category['id'],
                                                                         action='toggle_status').pack())],
-        [InlineKeyboardButton(text=escape_markdown(_('❌ Cancel')), callback_data='cancel_action')]
+        [InlineKeyboardButton(text=escape_markdown(_('❌ Cancel')), callback_data=CancelActionCallback().pack())]
     ]
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
@@ -219,8 +247,8 @@ async def handle_user_category_selection(callback_query: CallbackQuery, category
                               parent_id=category['id'])
     else:
         kbd = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=_('✅ Confirm'), callback_data='confirm_category')],
-            [InlineKeyboardButton(text=_('❌ Cancel'), callback_data='cancel_action')]
+            [InlineKeyboardButton(text=_('✅ Confirm'), callback_data=ConfirmCategorySelectionCallback().pack())],
+            [InlineKeyboardButton(text=_('❌ Cancel'), callback_data=CancelActionCallback().pack())]
         ])
         category_name = get_category_name(category, callback_query.from_user.language_code or 'en')
         await callback_query.message.edit_text(escape_markdown(
@@ -248,13 +276,16 @@ async def handle_admin_category_action(callback_query: CallbackQuery, callback_d
     elif callback_data.action == 'go_to_children':
         categories = await get_categories_from_state_or_cache(state)
         await show_categories(callback_query, categories, callback_query.from_user.language_code or 'en', state,
-                              parent_id=callback_data.category_id)
+                              parent_id=callback_data.category_id, admin_mode=True)
     else:
         await callback_query.answer(_("Unknown action."), show_alert=True)
 
 
-async def process_admin_action(callback_query: CallbackQuery, callback_data: AdminCategoryActionCallback,
-                               state: FSMContext):
+async def process_admin_action(
+    callback_query: CallbackQuery,
+    callback_data: AdminCategoryActionCallback,
+    state: FSMContext
+):
     """
     Process admin actions asynchronously.
 
@@ -263,19 +294,31 @@ async def process_admin_action(callback_query: CallbackQuery, callback_data: Adm
     :param state: The FSM context.
     """
     try:
-        await toggle_category_and_children_status(callback_data.category_id)
-        categories = await CategoryService.get_categories_from_db()
+        await CategoryService.toggle_category_and_children_status(callback_data.category_id)
+
+        categories = await CategoryService.get_categories_from_cache()
         await state.update_data(categories=categories)
 
         await callback_query.message.edit_text(escape_markdown(_("✅ Category status updated.")))
-        await show_categories(callback_query.message, categories, callback_query.from_user.language_code or 'en', state,
-                              parent_id=(await state.get_data()).get('parent_id'), admin_mode=True)
+        state_data = await state.get_data()
+        parent_id = state_data.get('parent_id')
+
+        await show_categories(
+            message_or_query=callback_query.message,
+            categories=categories,
+            user_language=callback_query.from_user.language_code or 'en',
+            state=state,
+            parent_id=parent_id,
+            admin_mode=True
+        )
     except Exception as e:
         logger.error(f"Error updating category status: {e}")
-        await callback_query.message.answer(escape_markdown(_("An error occurred while updating the category status.")))
+        await callback_query.message.answer(
+            escape_markdown(_("An error occurred while updating the category status."))
+        )
 
 
-@router.callback_query(F.data == 'cancel_action')
+@router.callback_query(CancelActionCallback().filter())
 async def cancel_last_action(callback_query: CallbackQuery, state: FSMContext) -> None:
     """
     Cancel the last action.
@@ -292,7 +335,7 @@ async def cancel_last_action(callback_query: CallbackQuery, state: FSMContext) -
                           admin_mode=True)
 
 
-@router.callback_query(F.data == 'confirm_category')
+@router.callback_query(ConfirmCategorySelectionCallback().filter())
 async def confirm_category_selection(callback_query: CallbackQuery, state: FSMContext) -> None:
     """
     Confirm the selected category.
@@ -311,12 +354,13 @@ async def confirm_category_selection(callback_query: CallbackQuery, state: FSMCo
 
     await state.update_data(selected_category=selected_category)
     await callback_query.message.answer(escape_markdown(
-        text=_('📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n❗️ Limit per one file - *45 MB*\n\n🚫 Send /cancel to cancel the operation.'))
+        text=_(
+            '📤 *Post an ad*\n\n📸 Send me the *media* of the ad.\n\n❗️ Limit per one file - *45 MB*\n\n🚫 Send /cancel to cancel the operation.'))
     )
     await state.set_state(PostAdStates.MEDIA)
 
 
-@router.callback_query(F.data == 'search_categories')
+@router.callback_query(SearchCategoryCallback().filter())
 async def prompt_search(callback_query: CallbackQuery, state: FSMContext) -> None:
     """
     Prompt the user to enter a search query.
@@ -328,10 +372,10 @@ async def prompt_search(callback_query: CallbackQuery, state: FSMContext) -> Non
     logger.debug(f"prompt_search called by user {callback_query.from_user.id}")
     await callback_query.message.edit_text(escape_markdown(text=_('Please enter your search query:')),
                                            reply_markup=None)
-    await state.set_state("category_search")
+    await state.set_state(PostAdStates.CATEGORY_SEARCH)
 
 
-@router.message(F.state == "category_search")
+@router.message(PostAdStates.CATEGORY_SEARCH)
 async def search_categories(message: Message, state: FSMContext) -> None:
     """
     Search for categories based on the user's query.
@@ -374,25 +418,6 @@ async def paginate_categories(callback_query: CallbackQuery, callback_data: Cate
         state=state,
         parent_id=data.get('parent_id'),
         search_query=data.get('search_query'),
-        page=page
+        page=page,
+        admin_mode=is_admin(callback_query.from_user.id)
     )
-
-
-async def toggle_category_and_children_status(category_id: int):
-    """
-    Toggle the status of a category and its children.
-
-    :param category_id: The ID of the category.
-    """
-    async with get_session() as session:
-        result = await session.execute(select(Category.path, Category.status).where(Category.id == category_id))
-        category = result.first()
-        if not category:
-            return
-
-        new_status = not category.status
-        await session.execute(update(Category).where(Category.path.like(f"{category.path}%")).values(status=new_status))
-        await session.commit()
-
-    categories = await CategoryService.get_categories_from_db()
-    await CategoryService.set_categories(categories)

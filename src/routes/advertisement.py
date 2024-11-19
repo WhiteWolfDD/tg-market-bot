@@ -177,7 +177,7 @@ async def post_ad_price(message: Message, state: FSMContext) -> None:
 
     price = re.sub(r'€|euro|eur', '', message.text, flags=re.IGNORECASE)
     try:
-        price_decimal = Decimal(price)
+        price_decimal = Decimal(price).quantize(Decimal('0.00'))
         if price_decimal.as_tuple().exponent != -2:
             raise ValueError
     except (ValueError, InvalidOperation):
@@ -350,10 +350,10 @@ async def confirm_ad_callback(callback_query: CallbackQuery, state: FSMContext):
 
     await AdvertisementService.create_user_advertisement(user_id=user_id, advertisement_id=advertisement.id)
 
-    admin_id = os.getenv("ADMIN_ID")
+    admins = os.getenv("ADMIN_ID").split(',')
     await send_ad_to_admin(
         advertisement=advertisement,
-        admin_id=admin_id,
+        admin_id=admins,
         bot=callback_query.bot
     )
     await state.clear()

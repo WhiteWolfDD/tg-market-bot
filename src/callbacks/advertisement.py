@@ -1,5 +1,3 @@
-from typing import Type
-
 from aiogram.filters.callback_data import CallbackData
 
 
@@ -81,7 +79,6 @@ class ManageAdCallback(CallbackData, prefix='manage_ad'):
     """
 
     ad_id: int = 0
-    admin: bool = False
 
 
 class EditAdCallback(CallbackData, prefix='edit_ad'):

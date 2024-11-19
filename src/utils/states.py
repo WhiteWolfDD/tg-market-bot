@@ -11,6 +11,7 @@ class PostAdStates(StatesGroup):
     CONFIRM_MEDIA = State()
     LOCATION = State()
     CONTACT_INFO = State()
+    CATEGORY_SEARCH = State()
 
 
 class EditAdStates(StatesGroup):

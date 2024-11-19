@@ -4,6 +4,7 @@ from aiogram import Router, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import lazy_gettext as __
 
 from src.callbacks.admin import ApproveAdCallback, RejectAdCallback
 from src.routes.category import show_categories
@@ -76,7 +77,9 @@ async def handle_approve_ad(callback_query: CallbackQuery, callback_data: Approv
 async def handle_reject_ad(callback_query: CallbackQuery, callback_data: RejectAdCallback):
     ad_id = callback_data.ad_id
     status = 'rejected'
-    user_message = _('❌ Your ad has been rejected. Please correct the mistakes and try again.')
+    ad = await AdvertisementService.get_advertisement_by_id(ad_id)
+    ad_title = ad.title if ad else __(f'with ID {ad_id}')
+    user_message = _(f'❌ Your ad {ad_title} has been rejected. Please correct the mistakes and try again.')
     admin_message = _('❌ Advertisement rejected.')
 
     await update_advertisement_status(callback_query, ad_id, status, user_message, admin_message)

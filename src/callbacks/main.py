@@ -23,3 +23,11 @@ class DeleteMessageCallback(CallbackData, prefix='delete_message'):
     """
 
     message_id: int
+
+
+class CancelActionCallback(CallbackData, prefix='cancel_action'):
+    """
+    Cancel action callback.
+    """
+
+    pass

@@ -23,9 +23,8 @@ async def edit_advertisement(callback_query: CallbackQuery, advertisement_id: in
     msg = _('🛠️ What field would you like to edit? Please choose an option below:')
     kbd = build_inline_keyboard(keyboard=build_edit_ad_keyboard(advertisement_id),
                                 back_cb=ManageAdCallback(
-                                    ad_id=advertisement_id,
-                                    admin=admin
-                                ).pack() if not admin else ManageAdAdminCallback().pack())
+                                    ad_id=advertisement_id
+                                ).pack() if not admin else ManageAdAdminCallback(ad_id=advertisement_id).pack())
 
     await callback_query.message.edit_text(text=escape_markdown(msg), reply_markup=kbd.as_markup())
 

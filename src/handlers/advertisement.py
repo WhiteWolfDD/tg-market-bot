@@ -186,7 +186,6 @@ async def save_media(message: Message, bot: Bot):
 
 @router.callback_query(ManageAdCallback().filter())
 async def manage_ad(update: Union[CallbackQuery, Message], ad_id: int = None):
-    admin = update.data.split(':')[2] if isinstance(update, CallbackQuery) else False
     if not ad_id:
         ad_id = int(update.data.split(':')[1])
     ad = await AdvertisementService.get_advertisement_by_id(ad_id)
@@ -216,23 +215,13 @@ async def manage_ad(update: Union[CallbackQuery, Message], ad_id: int = None):
         else:
             await update.answer(escape_markdown(ad_text))
 
-    if not admin:
-        kbd = build_inline_keyboard(
-            keyboard={'inline_kbd': [
-                [{'text': _('🗑 Delete'), 'callback_data': DeleteAdCallback(ad_id=cast(int, ad.id)).pack()}],
-                [{'text': _('✏️ Edit'), 'callback_data': EditAdCallback(ad_id=cast(int, ad.id)).pack()}]
-            ]},
-            back_cb=BackToAdsCallback().pack()
-        )
-    else:
-        kbd = build_inline_keyboard(
-            keyboard={'inline_kbd': [
-                [{'text': _('✅ Approve'), 'callback_data': ApproveAdCallback(ad_id=cast(int, ad.id)).pack()}],
-                [{'text': _('🔧 Manage'), 'callback_data': ManageAdAdminCallback(ad_id=cast(int, ad.id)).pack()}],
-                [{'text': _('❌ Reject'), 'callback_data': RejectAdCallback(ad_id=cast(int, ad.id)).pack()}]
-            ]},
-            back_cb=ManageAdAdminCallback(ad_id=cast(int, ad.id)).pack()
-        )
+    kbd = build_inline_keyboard(
+        keyboard={'inline_kbd': [
+            [{'text': _('🗑 Delete'), 'callback_data': DeleteAdCallback(ad_id=cast(int, ad.id)).pack()}],
+            [{'text': _('✏️ Edit'), 'callback_data': EditAdCallback(ad_id=cast(int, ad.id)).pack()}]
+        ]},
+        back_cb=BackToAdsCallback().pack()
+    )
 
     if isinstance(update, CallbackQuery):
         await update.message.answer(

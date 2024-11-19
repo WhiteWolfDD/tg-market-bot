@@ -6,7 +6,7 @@ from redis import asyncio as aioredis
 from src.database import get_session
 from src.models import MediaFile, UserAdvertisement
 from src.models.advertisement import Advertisement
-from src.utils.redis import get_redis, reload_redis_cache
+from src.utils.redis import get_redis
 
 
 class AdvertisementService:
@@ -194,8 +194,9 @@ class AdvertisementService:
             session.add(advertisement)
             await session.commit()
 
-            await redis_client.delete(f"advertisements:owner:{owner_id}")
             await redis_client.delete("advertisements")
+            await redis_client.delete(f"advertisements:owner:{owner_id}")
+            await redis_client.set(f"advertisement:{advertisement.id}", json.dumps(advertisement.to_dict()), ex=3600)
 
             return advertisement
 
