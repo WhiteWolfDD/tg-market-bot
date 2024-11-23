@@ -1,30 +1,23 @@
 import os
 import asyncio
 
+from src.middlewares.response_time import ResponseTimeMiddleware
+from src.middlewares.user_activity import UserActivityMiddleware
 from src.middlewares.user_middleware import UserMiddleware
 from src.utils.localization import setup_i18n
+from src.utils.log import setup_logging
+from src.utils.tasks import database_test_connection
+from src.utils.scheduler import start_scheduler
 
 from aiogram import Dispatcher, Bot, Router
-from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.dispatcher.middlewares.user_context import UserContextMiddleware
 from aiogram.exceptions import TelegramNetworkError
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.client.default import DefaultBotProperties
 
+from aiogram.dispatcher.middlewares.user_context import UserContextMiddleware
 
-async def database_test_connection() -> bool:
-    """
-    Test the connection to the database.
-    :return: True if the connection is successful, otherwise False.
-    """
-    from src.database import test_connection
-
-    try:
-        await test_connection()
-        return True
-    except Exception as e:
-        print(e)
-        return False
+logger = setup_logging()
 
 
 class Application:
@@ -38,8 +31,10 @@ class Application:
         """
         storage = MemoryStorage()
         self.__dispatcher = Dispatcher(storage=storage)
+        self.__dispatcher.update.middleware(ResponseTimeMiddleware())
         self.__dispatcher.update.middleware(UserMiddleware())
         self.__dispatcher.update.middleware(UserContextMiddleware())
+        self.__dispatcher.update.middleware(UserActivityMiddleware())
 
         setup_i18n(self.__dispatcher)
 
@@ -71,8 +66,23 @@ class Application:
 
         await self.__bot.delete_webhook(drop_pending_updates=True)
 
-        retry_delay = 1  # Initial delay in seconds
-        max_delay = 60  # Maximum delay in seconds
+        await self.__initialize_statistics()
+
+        # Start the scheduler
+        scheduler = start_scheduler()
+
+        try:
+            await self.__dispatcher.start_polling(self.__bot)
+        except (KeyboardInterrupt, SystemExit):
+            logger.info("Shutting down...")
+        finally:
+            scheduler.shutdown()
+            await self.__bot.session.close()
+            await self.__dispatcher.fsm.storage.close()
+
+        # Check if Telegram API is available
+        retry_delay = 1
+        max_delay = 60
 
         while True:
             try:
@@ -95,3 +105,15 @@ class Application:
         middleware = ErrorsMiddleware()
         self.__router.message.middleware(middleware)
         self.__router.callback_query.middleware(middleware)
+
+    @staticmethod
+    async def __initialize_statistics():
+        from src.database import get_session
+        from src.models import Statistic
+
+        async with get_session() as session:
+            statistic = await session.get(Statistic, 1)
+            if not statistic:
+                statistic = Statistic(id=1)
+                session.add(statistic)
+                await session.commit()

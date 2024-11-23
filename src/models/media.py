@@ -1,4 +1,6 @@
-from sqlalchemy import ForeignKey, String
+from datetime import datetime
+
+from sqlalchemy import ForeignKey, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
@@ -22,6 +24,10 @@ class MediaFile(Base):
     media_type: Mapped[str] = mapped_column(
         String,
         nullable=False
+    )
+    expiration_date: Mapped[datetime] = mapped_column(
+        nullable=False,
+        server_default=text("NOW() + INTERVAL '30 days'")
     )
 
     advertisement = relationship("Advertisement", back_populates="media_files")

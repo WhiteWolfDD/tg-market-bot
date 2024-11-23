@@ -1,12 +1,20 @@
 import json
+import os
 
-from sqlalchemy import select
+from aiogram import Bot
+from aiogram.exceptions import TelegramAPIError
+from sqlalchemy import select, delete, func
 from redis import asyncio as aioredis
 
 from src.database import get_session
 from src.models import MediaFile, UserAdvertisement
 from src.models.advertisement import Advertisement
+from src.services.statistic import StatisticService
+from src.utils.const import StoragePaths
+from src.utils.log import setup_logging
 from src.utils.redis import get_redis
+
+logger = setup_logging()
 
 
 class AdvertisementService:
@@ -83,11 +91,23 @@ class AdvertisementService:
             return [Advertisement(**adv) for adv in json.loads(advertisements)]
 
         async with get_session() as session:
+            # Get advertisement IDs from user_advertisement table
+            result = await session.execute(
+                select(UserAdvertisement.advertisement_id)
+                .where(UserAdvertisement.user_id == owner_id)
+            )
+            advertisement_ids = [row[0] for row in result.fetchall()]
+
+            if not advertisement_ids:
+                return []
+
+            # Get advertisements from Advertisement table
             result = await session.execute(
                 select(Advertisement)
-                .where(Advertisement.owner_id == owner_id)
+                .where(Advertisement.id.in_(advertisement_ids))
             )
             advertisements = result.scalars().all()
+
             await redis_client.set(f"advertisements:owner:{owner_id}",
                                    json.dumps([adv.to_dict() for adv in advertisements]), ex=3600)
 
@@ -193,6 +213,8 @@ class AdvertisementService:
 
             session.add(advertisement)
             await session.commit()
+
+            await StatisticService.increment_total_advertisements()
 
             await redis_client.delete("advertisements")
             await redis_client.delete(f"advertisements:owner:{owner_id}")
@@ -325,8 +347,89 @@ class AdvertisementService:
             )).scalar_one_or_none()
 
             if advertisement:
-                await session.delete(advertisement)
-                await session.commit()
+                media_files = (await session.execute(
+                    select(MediaFile)
+                    .where(MediaFile.advertisement_id == advertisement_id)
+                )).scalars().all()
+
+                for media_file in media_files:
+                    if media_file.media_type == 'photo':
+                        file_path = os.path.join(StoragePaths.PHOTO_PATH, f"{media_file.file_id}.jpg")
+                    elif media_file.media_type == 'video':
+                        file_path = os.path.join(StoragePaths.VIDEO_PATH, f"{media_file.file_id}.mp4")
+
+                    try:
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                    except Exception as e:
+                        logger.error(f"Failed to delete media file: {e}")
+
+                try:
+                    await session.execute(
+                        delete(MediaFile)
+                        .where(MediaFile.advertisement_id == advertisement_id)
+                    )
+
+                    await session.delete(advertisement)
+                    await session.commit()
+                except Exception as e:
+                    logger.error(f"Failed to delete advertisement: {e}")
+                    await session.rollback()
 
                 await redis_client.delete(f"advertisement:{advertisement_id}")
                 await redis_client.delete(f"advertisements:owner:{advertisement.owner_id}")
+
+    @staticmethod
+    async def delete_advertisement_from_channel(bot: Bot, advertisement_id: int) -> None:
+        """
+        Delete an advertisement from the channel.
+
+        :param bot: Instance of the bot.
+        :param advertisement_id: Advertisement ID.
+        """
+        try:
+            async with get_session() as session:
+                advertisement = await session.get(Advertisement, advertisement_id)
+                if advertisement and advertisement.channel_message_ids:
+                    channel_id = int(os.getenv("CHANNEL_ID"))
+                    for message_id in advertisement.channel_message_ids:
+                        try:
+                            await bot.delete_message(channel_id, message_id)
+                        except TelegramAPIError as e:
+                            logger.error(f"Failed to delete message {message_id}: {e}")
+
+                    await session.commit()
+                else:
+                    logger.error("Advertisement or channel_message_ids not found.")
+        except Exception as e:
+            logger.error(f"Failed to delete advertisement from the channel: {e}")
+
+
+    @staticmethod
+    async def delete_expired_media_file() -> None:
+        """
+        Delete a media file if it's expired.
+        """
+
+        async with get_session() as session:
+            result = await session.execute(
+                select(MediaFile)
+                .where(MediaFile.expiration_date < func.now())
+            )
+            media_files = result.scalars().all()
+
+            for media_file in media_files:
+                try:
+                    if media_file.media_type == 'photo':
+                        file_path = os.path.join(StoragePaths.PHOTO_PATH, f"{media_file.file_id}.jpg")
+                    elif media_file.media_type == 'video':
+                        file_path = os.path.join(StoragePaths.VIDEO_PATH, f"{media_file.file_id}.mp4")
+
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+
+                    await session.delete(media_file)
+                    await session.commit()
+                except Exception as e:
+                    logger.error(f"Failed to delete media file: {e}")
+                    await session.rollback()

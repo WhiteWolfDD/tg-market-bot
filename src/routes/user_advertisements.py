@@ -128,6 +128,15 @@ async def paginate_ads(callback_query: CallbackQuery) -> None:
 @router.callback_query(DeleteAdCallback().filter())
 async def delete_ad(callback_query: CallbackQuery) -> None:
     ad_id = int(callback_query.data.split(':')[1])
+
+    # Delete ad from a channel if it's approved
+    ad = await AdvertisementService.get_advertisement_by_id(ad_id)
+    if ad.status == 'approved':
+        await AdvertisementService.delete_advertisement_from_channel(
+            bot=callback_query.bot,
+            advertisement_id=ad_id
+        )
+
     await AdvertisementService.delete_advertisement(ad_id)
     await callback_query.answer(_('Ad deleted.'))
     await back_to_ads(callback_query)

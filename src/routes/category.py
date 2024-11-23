@@ -29,9 +29,10 @@ def is_admin(user_id: int) -> bool:
     :return: True if the user is an admin, False otherwise.
     """
     admins = os.getenv('ADMIN_ID').split(',')
-    is_user_admin = str(user_id) == admins
-    logger.debug(f"Checking if user {user_id} is admin: {is_user_admin}")
-    return is_user_admin
+    for admin in admins:
+        if str(user_id) == admin:
+            return True
+    return False
 
 
 def get_category_name(category: Dict[str, Any], language_code: str) -> str:

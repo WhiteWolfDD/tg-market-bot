@@ -1,6 +1,8 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 import asyncio
+
+from src.services.statistic import StatisticService
 from src.services.user import UserService
 from src.utils.log import setup_logging
 
@@ -27,11 +29,10 @@ class UserMiddleware(BaseMiddleware):
 
         if user_id and user_event:
             try:
-                get_user_task = asyncio.create_task(UserService.get_or_create_user(user_id, user_event))
-                result = await handler(event, data)
-                user = await get_user_task
+                user = await asyncio.create_task(UserService.get_or_create_user(user_id, user_event))
                 data['user'] = user
-                return result
+
+                return await handler(event, data)
             except AttributeError as e:
                 logger.error(f"UserMiddleware AttributeError: {e}")
                 return await handler(event, data)

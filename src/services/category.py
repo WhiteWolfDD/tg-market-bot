@@ -203,7 +203,6 @@ class CategoryService:
             for category in categories
         ]
 
-        # Обновляем кэш
         await CategoryService.set_categories(category_dicts)
 
         return category_dicts

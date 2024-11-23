@@ -15,7 +15,10 @@ router = Router()
 
 def is_admin(user_id: int) -> bool:
     admins = os.getenv('ADMIN_ID').split(',')
-    return str(user_id) in admins
+    for admin in admins:
+        if int(admin) == user_id:
+            return True
+    return False
 
 
 async def home_page(fullname: str, message: Message) -> tuple[str, ReplyKeyboardMarkup]:

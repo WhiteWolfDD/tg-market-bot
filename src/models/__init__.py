@@ -4,3 +4,4 @@ from src.models.user_advertisement import UserAdvertisement
 from src.models.category import Category
 from src.models.category_translation import CategoryTranslation
 from src.models.media import MediaFile
+from src.models.statistic import Statistic

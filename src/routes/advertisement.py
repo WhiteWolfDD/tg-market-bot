@@ -351,12 +351,13 @@ async def confirm_ad_callback(callback_query: CallbackQuery, state: FSMContext):
     await AdvertisementService.create_user_advertisement(user_id=user_id, advertisement_id=advertisement.id)
 
     admins = os.getenv("ADMIN_ID").split(',')
-    await send_ad_to_admin(
-        advertisement=advertisement,
-        admin_id=admins,
-        bot=callback_query.bot
-    )
-    await state.clear()
+    for admins_id in admins:
+        await send_ad_to_admin(
+            advertisement=advertisement,
+            admin_id=int(admins_id),
+            bot=callback_query.bot
+        )
+        await state.clear()
 
 
 @router.callback_query(CancelAdCallback.filter())

@@ -4,6 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import Numeric, String, ARRAY, ForeignKey, func, CheckConstraint
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from src.database import Base
@@ -76,6 +77,10 @@ class Advertisement(Base):
         nullable=False,
         server_default=func.now(),
         onupdate=func.now()
+    )
+    channel_message_ids: Mapped[dict] = mapped_column(
+        JSONB,
+        nullable=True
     )
 
     # Relationships

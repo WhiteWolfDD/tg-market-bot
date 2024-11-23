@@ -1,44 +1,37 @@
 from aiogram import Router
 from aiogram.types import Message
-from sqlalchemy import select, func
-from src.database import get_session
-from src.models import User, Advertisement, Category
+from aiogram.utils.i18n import gettext as _
+
+from src.services.statistic import StatisticService
 from src.utils.helpers import escape_markdown
 
 router = Router()
 
 
-async def collect_statistics():
-    """
-    Collect bot statistics.
-    """
-
-    async with get_session() as session:
-        total_users = await session.execute(select(func.count()).select_from(User))
-        total_ads = await session.execute(select(func.count()).select_from(Advertisement))
-        total_categories = await session.execute(select(func.count()).select_from(Category))
-        # total_requests = await session.execute(select(func.count()).select_from(Request))
-
-        return {
-            'total_users': total_users.scalar(),
-            'total_ads': total_ads.scalar(),
-            'total_categories': total_categories.scalar(),
-            # 'total_requests': total_requests.scalar()
-        }
-
 async def display_statistics(message: Message):
-    stats = await collect_statistics()
+    statistics = await StatisticService.get_full_statistics()
 
-    msg = (
-        f"*📊 Bot Statistics*\n\n"
-        f"Total users: {stats['total_users']}\n"
-        f"Total ads: {stats['total_ads']}\n"
-        f"Total categories: {stats['total_categories']}\n"
-        # f"Total requests: {stats['total_requests']}\n"
+    popular_categories = statistics.get('popular_categories', [])
+    popular_categories_text = ''
+    for idx, category in enumerate(popular_categories, 1):
+        popular_categories_text += f"{idx}. {category.get('emoji', '')} {category.get('category_name', 'Unknown')} - {category.get('ad_count', 0)} ads\n"
+
+    msg = _(
+        f"📊 *Bot Statistics:*\n\n"
+        f"👥 Total users: {statistics.get('total_users', 0)}\n"
+        f"🆕 New users today: {statistics.get('new_users_today', 0)}\n"
+        f"🟢 Active users: {statistics.get('active_users', 0)}\n"
+        f"\n"
+        f"📄 Total advertisements: {statistics.get('total_advertisements', 0)}\n"
+        f"📈 Active advertisements: {statistics.get('active_advertisements', 0)}\n"
+        f"✅ Approved advertisements: {statistics.get('successful_advertisements', 0)}\n"
+        f"❌ Deleted advertisements: {statistics.get('deleted_advertisements', 0)}\n"
+        f"\n"
+        f"📁 Total categories: {statistics.get('total_categories', 0)}\n"
+        f"🔥 Popular categories:\n{popular_categories_text}\n"
+        f"⏱ Average response time: {statistics.get('response_time_avg', 0):.2f} seconds\n"
     )
 
     await message.answer(
-        text=escape_markdown(msg),
-        parse_mode='MarkdownV2'
+        text=escape_markdown(msg)
     )
-

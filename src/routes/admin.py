@@ -133,6 +133,8 @@ async def post_ad_to_channel(ad_id: int, bot: Bot):
     media_group = await build_media_group(ad_id, ad_text)
 
     try:
-        await bot.send_media_group(chat_id=channel_id, media=media_group.build())
+        messages = await bot.send_media_group(chat_id=channel_id, media=media_group.build())
+        message_ids = [message.message_id for message in messages]
+        await AdvertisementService.update_advertisement(advertisement_id=ad_id, channel_message_ids=message_ids)
     except Exception as e:
         logger.error(f"Cant send media group: {e}")

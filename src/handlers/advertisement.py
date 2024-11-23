@@ -218,7 +218,7 @@ async def manage_ad(update: Union[CallbackQuery, Message], ad_id: int = None):
     kbd = build_inline_keyboard(
         keyboard={'inline_kbd': [
             [{'text': _('🗑 Delete'), 'callback_data': DeleteAdCallback(ad_id=cast(int, ad.id)).pack()}],
-            [{'text': _('✏️ Edit'), 'callback_data': EditAdCallback(ad_id=cast(int, ad.id)).pack()}]
+            [{'text': _('✏️ Edit'), 'callback_data': EditAdCallback(ad_id=cast(int, ad.id)).pack()}] if ad.status == 'pending' else [],
         ]},
         back_cb=BackToAdsCallback().pack()
     )
