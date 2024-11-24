@@ -120,14 +120,22 @@ async def post_ad_to_channel(ad_id: int, bot: Bot):
         return
 
     hashtags = " ".join(advertisement.hashtags)
-    ad_text = (
-        f"*Title:* {advertisement.title}\n"
-        f"*Description:* {advertisement.description}\n"
-        f"*Reason for Selling:* {advertisement.reason}\n"
-        f"*Price:* {advertisement.price} €\n\n"
-        f"*Contact Information:* {advertisement.contact_info}\n"
-        f"*Location:* {advertisement.location}\n\n"
-        f"{hashtags}"
+    ad_text = _(
+        "*Title:* {advertisement_title}\n"
+        "*Description:* {advertisement_description}\n"
+        "*Reason for Selling:* {advertisement_reason}\n"
+        "*Price:* {advertisement_price} €\n\n"
+        "*Contact Information:* {advertisement_contact_info}\n"
+        "*Location:* {advertisement_location}\n\n"
+        "{hashtags}"
+    ).format(
+        advertisement_title=advertisement.title,
+        advertisement_description=advertisement.description,
+        advertisement_reason=advertisement.reason,
+        advertisement_price=advertisement.price,
+        advertisement_contact_info=advertisement.contact_info,
+        advertisement_location=advertisement.location,
+        hashtags=hashtags
     )
 
     media_group = await build_media_group(ad_id, ad_text)

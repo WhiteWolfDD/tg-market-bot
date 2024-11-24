@@ -1,15 +1,15 @@
-# English translations for PROJECT.
+# English translations for .
 # Copyright (C) 2024 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# This file is distributed under the same license as the  project.
+# FIRST AUTHOR <mrne4to@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-10-14 13:54+0300\n"
-"PO-Revision-Date: 2024-10-14 13:57+0300\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version:  1.0\n"
+"Report-Msgid-Bugs-To: mrne4to@gmail.com\n"
+"POT-Creation-Date: 2024-11-24 14:19+0200\n"
+"PO-Revision-Date: 2024-11-24 13:24+0200\n"
+"Last-Translator: Vladislav Hodzhajev mrne4to@gmail.com\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -18,242 +18,956 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-##: src/routes/advertisement.py:20 src/routes/home.py:97
- msgid ""
- "📤 *Post an ad*\n"
- "\n"
- "📝 Send me the *title* of the ad.\n"
- "\n"
- "🚫 Send /cancel to cancel the operation."
- msgstr ""
- "📤 *Post an ad*\n"
- "\n"
- "📝 Send me the *title* of the ad.\n"
- "\n"
- "🚫 Send /cancel to cancel the operation."
+#: src/handlers/advertisement.py:29
+msgid "🚫 Unsupported media type."
+msgstr "🚫 Unsupported media type."
 
- #: src/routes/advertisement.py:30
- msgid ""
- "📤 *Post an ad*\n"
- "\n"
- "📝 Send me the *description* of the ad."
- msgstr ""
- "📤 *Post an ad*\n"
- "\n"
- "📝 Send me the *description* of the ad."
+#: src/handlers/advertisement.py:33
+msgid "🚫 The file size must be less than 45 MB."
+msgstr "🚫 The file size must be less than 45 MB."
 
- #: src/routes/advertisement.py:39
- msgid ""
- "📤 *Post an ad*\n"
- "\n"
- "💵 Send me the *price* of the ad."
- msgstr ""
- "📤 *Post an ad*\n"
- "\n"
- "💵 Send me the *price* of the ad."
+#: src/handlers/advertisement.py:41
+msgid "🚫 You can only upload up to 10 media files."
+msgstr "🚫 You can only upload up to 10 media files."
 
- #: src/routes/category.py:32 src/routes/category.py:103
- msgid "No categories found."
- msgstr "No categories found."
+#: src/handlers/advertisement.py:43 src/handlers/advertisement.py:58
+msgid "✅ Finish"
+msgstr "✅ Finish"
 
- #: src/routes/category.py:83
- msgid "🔍 Search"
- msgstr "🔍 Search"
+#: src/handlers/advertisement.py:54
+msgid "📤 File uploaded. Do you want to add another media file?"
+msgstr "📤 File uploaded. Do you want to add another media file?"
 
- #: src/routes/category.py:91 src/utils/helpers.py:72
- msgid "⬅️ Back"
- msgstr "⬅️ Back"
+#: src/handlers/advertisement.py:56
+msgid "➕ Add more"
+msgstr "➕ Add more"
 
- #: src/routes/category.py:96
- msgid "➡️ Forward"
- msgstr "➡️ Forward"
+#: src/handlers/advertisement.py:68 src/handlers/advertisement.py:76
+#: src/handlers/advertisement.py:89 src/handlers/advertisement.py:105
+msgid "🚫 Invalid state."
+msgstr "🚫 Invalid state."
 
- #: src/routes/category.py:118
- msgid "Please select a category:"
- msgstr "Please select a category:"
+#: src/handlers/advertisement.py:80
+msgid "📤 Send the next media file (photo, video, document)."
+msgstr "📤 Send the next media file (photo, video, document)."
 
- #: src/routes/category.py:152
- msgid "Category not found."
- msgstr "Category not found."
+#: src/handlers/advertisement.py:99
+msgid "🚫 No media files found."
+msgstr "🚫 No media files found."
 
- #: src/routes/category.py:168
- msgid "Category selected."
- msgstr "Category selected."
+#: src/handlers/advertisement.py:102
+msgid "✅ Media files have been successfully updated."
+msgstr "✅ Media files have been successfully updated."
 
- #: src/routes/category.py:178
- msgid "Please enter your search query:"
- msgstr "Please enter your search query:"
+#: src/handlers/advertisement.py:147 src/routes/edit_advertisement.py:70
+msgid "📍 Share Location"
+msgstr "📍 Share Location"
 
- #: src/routes/category.py:192
- msgid "Please enter a valid search query."
- msgstr "Please enter a valid search query."
+#: src/handlers/advertisement.py:152
+msgid "📍 Send me the *location* of the ad or type it manually."
+msgstr "📍 Send me the *location* of the ad or type it manually."
 
- #: src/routes/faq.py:34
- msgid ""
- "❕ *How to advertise on the platform?*\n"
- "\n"
- "1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
- "posting an ad.\n"
- "\n"
- "2️⃣ Fill in the required fields: *title*, *description*, *price*, "
- "*category*, *location*.\n"
- "\n"
- "3️⃣ Upload *photos* of the product you are selling.\n"
- "\n"
- "4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
- "\n"
- "5️⃣ Wait for the ad to be *approved* by the moderator.\n"
- "\n"
- "6️⃣ Once the ad is approved, it will be available for viewing by other "
- "users."
- msgstr ""
- "❕ *How to advertise on the platform?*\n"
- "\n"
- "1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
- "posting an ad.\n"
- "\n"
- "2️⃣ Fill in the required fields: *title*, *description*, *price*, "
- "*category*, *location*.\n"
- "\n"
- "3️⃣ Upload *photos* of the product you are selling.\n"
- "\n"
- "4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
- "\n"
- "5️⃣ Wait for the ad to be *approved* by the moderator.\n"
- "\n"
- "6️⃣ Once the ad is approved, it will be available for viewing by other "
- "users."
+#: src/handlers/advertisement.py:176
+msgid "📤 Video is being uploaded to the server..."
+msgstr "📤 Video is being uploaded to the server..."
 
- #: src/routes/faq.py:63
- msgid ""
- "❕ *What is the cost of advertising?*\n"
- "\n"
- "🔹 The cost of advertising on the platform is *free*.\n"
- "\n"
- "🔹 You can post an unlimited number of ads without any restrictions."
- msgstr ""
- "❕ *What is the cost of advertising?*\n"
- "\n"
- "🔹 The cost of advertising on the platform is *free*.\n"
- "\n"
- "🔹 You can post an unlimited number of ads without any restrictions."
+#: src/handlers/advertisement.py:184
+msgid "✅ Video has been successfully uploaded to the server."
+msgstr "✅ Video has been successfully uploaded to the server."
 
- #: src/routes/faq.py:90
- msgid ""
- "❕ *What we do with your ads?*\n"
- "\n"
- "🔹 We *moderate* all ads before they are published on the platform.\n"
- "\n"
- "🔹 We *check* the ad for compliance with the rules of the platform.\n"
- "\n"
- "🔹 We *approve* the ad if it meets the requirements."
- msgstr ""
- "❕ *What we do with your ads?*\n"
- "\n"
- "🔹 We *moderate* all ads before they are published on the platform.\n"
- "\n"
- "🔹 We *check* the ad for compliance with the rules of the platform.\n"
- "\n"
- "🔹 We *approve* the ad if it meets the requirements."
+#: src/handlers/advertisement.py:194
+msgid ""
+"*Title:* {ad_title}\n"
+"*Description:* {ad_description}\n"
+"*Reason for Selling:* {ad_reason}\n"
+"*Price:* {ad_price} €\n"
+"*Contact Information:* {ad_contact_info}\n"
+"*Location:* {ad_location}\n"
+"{hashtags}"
+msgstr ""
+"*Title:* {ad_title}\n"
+"*Description:* {ad_description}\n"
+"*Reason for Selling:* {ad_reason}\n"
+"*Price:* {ad_price} €\n"
+"*Contact Information:* {ad_contact_info}\n"
+"*Location:* {ad_location}\n"
+"{hashtags}"
 
- #: src/routes/faq.py:133
- msgid ""
- "📚 *FAQ*\n"
- "\n"
- "👇 Here you can find answers to frequently asked questions.\n"
- "\n"
- "🔹 *How to advertise on the platform?*\n"
- "🔹 *What is the cost of advertising?*\n"
- "🔹 *What we do with your ads?*\n"
- "👇 *Choose a question* to get an answer."
- msgstr ""
- "📚 *FAQ*\n"
- "\n"
- "👇 Here you can find answers to frequently asked questions.\n"
- "\n"
- "🔹 *How to advertise on the platform?*\n"
- "🔹 *What is the cost of advertising?*\n"
- "🔹 *What we do with your ads?*\n"
- "👇 *Choose a question* to get an answer."
+#: src/handlers/advertisement.py:228
+msgid "🗑 Delete"
+msgstr "🗑 Delete"
 
- #: src/routes/faq.py:144
- msgid "🔹 How to advertise on the platform?"
- msgstr "🔹 How to advertise on the platform?"
+#: src/handlers/advertisement.py:229 src/routes/req_advertisements.py:143
+msgid "✏️ Edit"
+msgstr "✏️ Edit"
 
- #: src/routes/faq.py:147
- msgid "🔹 What is the cost of advertising?"
- msgstr "🔹 What is the cost of advertising?"
+#: src/handlers/advertisement.py:236 src/handlers/advertisement.py:241
+msgid "🎟 Please manage this ad:"
+msgstr "🎟 Please manage this ad:"
 
- #: src/routes/faq.py:150
- msgid "🔹 What we do with your ads?"
- msgstr "🔹 What we do with your ads?"
+#: src/middlewares/errors.py:42
+msgid ""
+"😕 *Oops!*\n"
+"\n"
+"Something went wrong while processing your request. Please try again "
+"later.\n"
+"\n"
+"Our team has been notified about this error."
+msgstr ""
+"😕 *Oops!*\n"
+"\n"
+"Something went wrong while processing your request. Please try again "
+"later.\n"
+"\n"
+"Our team has been notified about this error."
 
- #: src/routes/home.py:22
- msgid ""
- "👋 Hello, *{username}*.\n"
- "I'm *Seller — curator of your ads*.\n"
- "\n"
- "🌟 Here you can post your *ads* for *selling* your product."
- msgstr ""
- "👋 Hello, *{username}*.\n"
- "I'm *Seller — curator of your ads*.\n"
- "\n"
- "🌟 Here you can post your *ads* for *selling* your product."
+#: src/middlewares/errors.py:75
+msgid ""
+"💥 *A new error has occurred!*\n"
+"\n"
+"Exception log is attached below."
+msgstr ""
+"💥 *A new error has occurred!*\n"
+"\n"
+"Exception log is attached below."
 
- #: src/routes/home.py:28 src/routes/home.py:90
- msgid "📤 Post an ad"
- msgstr "📤 Post an ad"
+#: src/routes/admin.py:64
+msgid "✅ Your ad has been approved and posted in the channel."
+msgstr "✅ Your ad has been approved and posted in the channel."
 
- #: src/routes/home.py:28
- msgid "📦 My ads"
- msgstr "📦 My ads"
+#: src/routes/admin.py:65
+msgid "✅ Advertisement approved."
+msgstr "✅ Advertisement approved."
 
- #: src/routes/home.py:29
- msgid "🌐 Language"
- msgstr "🌐 Language"
+#: src/routes/admin.py:73
+msgid "🚫 Error while posting ad to channel."
+msgstr "🚫 Error while posting ad to channel."
 
- #: src/routes/home.py:34 src/routes/home.py:104 src/routes/home.py:117
- msgid "📦 Requested ads"
- msgstr "📦 Requested ads"
+#: src/routes/admin.py:83
+msgid "❌ Advertisement rejected."
+msgstr "❌ Advertisement rejected."
 
- #: src/routes/home.py:34 src/routes/home.py:105 src/routes/home.py:115
- #: src/routes/home.py:131
- msgid "📜 Error logs"
- msgstr "📜 Error logs"
+#: src/routes/admin.py:99
+msgid "🚫 Cannot find the user."
+msgstr "🚫 Cannot find the user."
 
- #: src/routes/home.py:36 src/routes/home.py:78
- msgid "📝 Manage Categories"
- msgstr "📝 Manage Categories"
+#: src/routes/admin.py:123 src/routes/advertisement.py:524
+#: src/routes/req_advertisements.py:72
+msgid ""
+"*Title:* {advertisement_title}\n"
+"*Description:* {advertisement_description}\n"
+"*Reason for Selling:* {advertisement_reason}\n"
+"*Price:* {advertisement_price} €\n"
+"\n"
+"*Contact Information:* {advertisement_contact_info}\n"
+"*Location:* {advertisement_location}\n"
+"\n"
+"{hashtags}"
+msgstr ""
+"*Title:* {advertisement_title}\n"
+"*Description:* {advertisement_description}\n"
+"*Reason for Selling:* {advertisement_reason}\n"
+"*Price:* {advertisement_price} €\n"
+"\n"
+"*Contact Information:* {advertisement_contact_info}\n"
+"*Location:* {advertisement_location}\n"
+"\n"
+"{hashtags}"
 
- #: src/routes/home.py:36
- msgid "📊 Statistics"
- msgstr "📊 Statistics"
+#: src/routes/advertisement.py:70
+msgid "🚫 Operation canceled."
+msgstr "🚫 Operation canceled."
 
- #: src/routes/home.py:87 src/routes/home.py:112
- msgid "❌ You do not have access to this command."
- msgstr "❌ You do not have access to this command."
+#: src/routes/advertisement.py:87
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *title* of the ad.\n"
+"✍️ e.g. iPhone 16 Pro Max\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *title* of the ad.\n"
+"✍️ e.g. iPhone 16 Pro Max\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
 
- #: src/routes/home.py:99
- msgid "🚫 Cancel"
- msgstr "🚫 Cancel"
+#: src/routes/advertisement.py:111
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *description* of the ad.\n"
+"✍️ e.g. Brand new iPhone 16 Pro Max with 512GB.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Send me the *description* of the ad.\n"
+"✍️ e.g. Brand new iPhone 16 Pro Max with 512GB.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
 
- #: src/routes/home.py:118
- msgid "🚧 This feature is under construction"
- msgstr "🚧 This feature is under construction"
+#: src/routes/advertisement.py:135
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Please provide the *reason for selling*.\n"
+"✍️ e.g. I need money for my tuition fees.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"📝 Please provide the *reason for selling*.\n"
+"✍️ e.g. I need money for my tuition fees.\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
 
- #: src/routes/home.py:134 src/routes/home.py:140
- msgid "Logs feature is under construction."
- msgstr "Logs feature is under construction."
+#: src/routes/advertisement.py:159
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"💵 Send me the *price* of the ad in euro.\n"
+"✍️ e.g. 699.99\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"💵 Send me the *price* of the ad in euro.\n"
+"✍️ e.g. 699.99\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
 
- #: src/utils/helpers.py:53
- msgid "⬅️ Prev"
- msgstr "⬅️ Prev"
+#: src/routes/advertisement.py:185
+msgid "💵 Please enter a valid price with 2 decimal places."
+msgstr "💵 Please enter a valid price with 2 decimal places."
 
- #: src/utils/helpers.py:57
- msgid "Next ➡️"
- msgstr "Next ➡️"
+#: src/routes/advertisement.py:222
+msgid "📎 Send me the *contact information* of the ad."
+msgstr "📎 Send me the *contact information* of the ad."
 
- #: src/utils/helpers.py:80
- msgid "🏠 Home"
- msgstr "🏠 Home"
+#: src/routes/advertisement.py:239
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"☕️ *Please wait while I process your ad...*"
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"☕️ *Please wait while I process your ad...*"
+
+#: src/routes/advertisement.py:267
+msgid ""
+"*Title:* {title}\n"
+"*Description:* {description}\n"
+"*Reason for Selling:* {reason}\n"
+"*Price:* {price} €\n"
+"\n"
+"*Contact Information:* {contact_info}\n"
+"*Location:* {location_text}\n"
+"\n"
+"{hashtags_text}"
+msgstr ""
+"*Title:* {title}\n"
+"*Description:* {description}\n"
+"*Reason for Selling:* {reason}\n"
+"*Price:* {price} €\n"
+"\n"
+"*Contact Information:* {contact_info}\n"
+"*Location:* {location_text}\n"
+"\n"
+"{hashtags_text}"
+
+#: src/routes/advertisement.py:301
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 *Please confirm the details of your ad.*"
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 *Please confirm the details of your ad.*"
+
+#: src/routes/advertisement.py:304 src/routes/category.py:247
+msgid "✅ Confirm"
+msgstr "✅ Confirm"
+
+#: src/routes/advertisement.py:305
+msgid "🚫 Cancel"
+msgstr "🚫 Cancel"
+
+#: src/routes/advertisement.py:321
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 Your ad has been *successfully submitted for moderation*.\n"
+"\n"
+"🔍 You can check the *status* of your ad through the \"My Ads\" button in "
+"the ReplyKeyboard when you use the /start command.\n"
+"\n"
+"✅ If your ad *passes the moderation*, it will be *posted in the group* "
+"and you will be *notified immediately*.\n"
+"\n"
+"❌ If your ad *does not pass* the moderation, *you will be notified* as "
+"well."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 Your ad has been *successfully submitted for moderation*.\n"
+"\n"
+"🔍 You can check the *status* of your ad through the \"My Ads\" button in "
+"the ReplyKeyboard when you use the /start command.\n"
+"\n"
+"✅ If your ad *passes the moderation*, it will be *posted in the group* "
+"and you will be *notified immediately*.\n"
+"\n"
+"❌ If your ad *does not pass* the moderation, *you will be notified* as "
+"well."
+
+#: src/routes/advertisement.py:383
+msgid ""
+"🚫 *Ad Submission Canceled*\n"
+"\n"
+"Your ad submission has been *canceled*.\n"
+"\n"
+"To submit a new ad, please start the process again by selecting the \"📤 "
+"Post an ad\" button in the main menu.\n"
+"\n"
+"We look forward to seeing your ad soon! 😊"
+msgstr ""
+"🚫 *Ad Submission Canceled*\n"
+"\n"
+"Your ad submission has been *canceled*.\n"
+"\n"
+"To submit a new ad, please start the process again by selecting the \"📤 "
+"Post an ad\" button in the main menu.\n"
+"\n"
+"We look forward to seeing your ad soon! 😊"
+
+#: src/routes/advertisement.py:422 src/routes/advertisement.py:426
+msgid "Unknown location"
+msgstr "Unknown location"
+
+#: src/routes/advertisement.py:549 src/routes/req_advertisements.py:94
+msgid "✅ Approve"
+msgstr "✅ Approve"
+
+#: src/routes/advertisement.py:550 src/routes/req_advertisements.py:95
+msgid "🔧 Manage"
+msgstr "🔧 Manage"
+
+#: src/routes/advertisement.py:551 src/routes/req_advertisements.py:96
+msgid "❌ Reject"
+msgstr "❌ Reject"
+
+#: src/routes/advertisement.py:561
+msgid "🎟 Please approve or reject this ad:"
+msgstr "🎟 Please approve or reject this ad:"
+
+#: src/routes/category.py:94
+msgid "No categories found."
+msgstr "No categories found."
+
+#: src/routes/category.py:149
+msgid "🔍 Search categories"
+msgstr "🔍 Search categories"
+
+#: src/routes/category.py:161
+msgid "Please select a category:"
+msgstr "Please select a category:"
+
+#: src/routes/category.py:189
+msgid "Category not found."
+msgstr "Category not found."
+
+#: src/routes/category.py:209
+msgid "➡️ Go to child categories"
+msgstr "➡️ Go to child categories"
+
+#: src/routes/category.py:212
+msgid "✅ Confirm category (Don't use in Category Edit)"
+msgstr "✅ Confirm category (Don't use in Category Edit)"
+
+#: src/routes/category.py:214
+msgid "🔄 Toggle category status"
+msgstr "🔄 Toggle category status"
+
+#: src/routes/category.py:217 src/routes/category.py:248
+#: src/routes/edit_advertisement.py:76
+msgid "❌ Cancel"
+msgstr "❌ Cancel"
+
+#: src/routes/category.py:224
+msgid ""
+"You have selected the category: {category_name}\n"
+"Choose an action:"
+msgstr ""
+"You have selected the category: {category_name}\n"
+"Choose an action:"
+
+#: src/routes/category.py:252
+msgid ""
+"You have selected the category: {category_name}\n"
+"\n"
+"✅ Confirm your selection:"
+msgstr ""
+"You have selected the category: {category_name}\n"
+"\n"
+"✅ Confirm your selection:"
+
+#: src/routes/category.py:271
+msgid ""
+"⏳ Processing, please wait...\n"
+"\n"
+" It may take a while."
+msgstr ""
+"⏳ Processing, please wait...\n"
+"\n"
+" It may take a while."
+
+#: src/routes/category.py:278
+msgid "Unknown action."
+msgstr "Unknown action."
+
+#: src/routes/category.py:299
+msgid "✅ Category status updated."
+msgstr "✅ Category status updated."
+
+#: src/routes/category.py:314
+msgid "An error occurred while updating the category status."
+msgstr "An error occurred while updating the category status."
+
+#: src/routes/category.py:327
+msgid "Action canceled."
+msgstr "Action canceled."
+
+#: src/routes/category.py:346
+msgid "Please select a category first."
+msgstr "Please select a category first."
+
+#: src/routes/category.py:351
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📸 Send me the *media* of the ad.\n"
+"\n"
+"❗️ Limit per one file - *45 MB*\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Post an ad*\n"
+"\n"
+"📸 Send me the *media* of the ad.\n"
+"\n"
+"❗️ Limit per one file - *45 MB*\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+
+#: src/routes/category.py:366
+msgid "Please enter your search query:"
+msgstr "Please enter your search query:"
+
+#: src/routes/category.py:381
+msgid "Please enter a valid search query."
+msgstr "Please enter a valid search query."
+
+#: src/routes/edit_advertisement.py:23
+msgid "🛠️ What field would you like to edit? Please choose an option below:"
+msgstr "🛠️ What field would you like to edit? Please choose an option below:"
+
+#: src/routes/edit_advertisement.py:37
+msgid "📷 Please send me a new photo or video for this advertisement."
+msgstr "📷 Please send me a new photo or video for this advertisement."
+
+#: src/routes/edit_advertisement.py:38
+msgid "📝 Please send me a new title for this advertisement."
+msgstr "📝 Please send me a new title for this advertisement."
+
+#: src/routes/edit_advertisement.py:39
+msgid "📄 Please send me a new description for this advertisement."
+msgstr "📄 Please send me a new description for this advertisement."
+
+#: src/routes/edit_advertisement.py:40
+msgid "💰 Please send me a new price for this advertisement."
+msgstr "💰 Please send me a new price for this advertisement."
+
+#: src/routes/edit_advertisement.py:41
+msgid "📝 Please send me a new reason for selling this item."
+msgstr "📝 Please send me a new reason for selling this item."
+
+#: src/routes/edit_advertisement.py:43
+msgid "📞 Please send me new contact information for this advertisement."
+msgstr "📞 Please send me new contact information for this advertisement."
+
+#: src/routes/edit_advertisement.py:44
+msgid "📍 Please send me a new location for this advertisement."
+msgstr "📍 Please send me a new location for this advertisement."
+
+#: src/routes/edit_advertisement.py:45
+msgid "📦 Please send me a new category for this advertisement."
+msgstr "📦 Please send me a new category for this advertisement."
+
+#: src/routes/edit_advertisement.py:46
+msgid "🔖 Please send me new hashtags for this advertisement."
+msgstr "🔖 Please send me new hashtags for this advertisement."
+
+#: src/routes/edit_advertisement.py:58
+msgid "Unknown field."
+msgstr "Unknown field."
+
+#: src/routes/edit_advertisement.py:104
+msgid "has been successfully updated."
+msgstr "has been successfully updated."
+
+#: src/routes/edit_advertisement.py:108
+msgid "🙇‍♂️ Failed to update the advertisement field."
+msgstr "🙇‍♂️ Failed to update the advertisement field."
+
+#: src/routes/edit_advertisement.py:135
+msgid "Please share your location."
+msgstr "Please share your location."
+
+#: src/routes/edit_advertisement.py:140
+msgid "📍 Location has been successfully updated."
+msgstr "📍 Location has been successfully updated."
+
+#: src/routes/edit_advertisement.py:144
+msgid "🙇‍♂️ Failed to update the location."
+msgstr "🙇‍♂️ Failed to update the location."
+
+#: src/routes/exception_logs.py:35 src/routes/exception_logs.py:41
+msgid ""
+"📜 *Error logs*.\n"
+"\n"
+"No logs found."
+msgstr ""
+"📜 *Error logs*.\n"
+"\n"
+"No logs found."
+
+#: src/routes/exception_logs.py:57
+msgid ""
+"📜 *Error logs*.\n"
+"\n"
+"Select a log to view."
+msgstr ""
+"📜 *Error logs*.\n"
+"\n"
+"Select a log to view."
+
+#: src/routes/exception_logs.py:69
+msgid "⬅️ Previous"
+msgstr "⬅️ Previous"
+
+#: src/routes/exception_logs.py:74
+msgid "➡️ Next"
+msgstr "➡️ Next"
+
+#: src/routes/exception_logs.py:79
+msgid "🗑 Delete all logs"
+msgstr "🗑 Delete all logs"
+
+#: src/routes/exception_logs.py:113
+msgid ""
+"📜 *Error log*.\n"
+"\n"
+"Log file is attached below."
+msgstr ""
+"📜 *Error log*.\n"
+"\n"
+"Log file is attached below."
+
+#: src/routes/exception_logs.py:156
+msgid "📜 No logs found."
+msgstr "📜 No logs found."
+
+#: src/routes/exception_logs.py:186
+msgid "📜 Log not found."
+msgstr "📜 Log not found."
+
+#: src/routes/faq.py:33
+msgid ""
+"❕ *How to advertise on the platform?*\n"
+"\n"
+"1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
+"posting an ad.\n"
+"\n"
+"2️⃣ Fill in the required fields: *title*, *description*, *price*, "
+"*category*, *location*.\n"
+"\n"
+"3️⃣ Upload *photos* of the product you are selling.\n"
+"\n"
+"4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
+"\n"
+"5️⃣ Wait for the ad to be *approved* by the moderator.\n"
+"\n"
+"6️⃣ Once the ad is approved, it will be available for viewing by other "
+"users."
+msgstr ""
+"❕ *How to advertise on the platform?*\n"
+"\n"
+"1️⃣ Click on the *\"📤 Post an ad\"* button in the main menu to start "
+"posting an ad.\n"
+"\n"
+"2️⃣ Fill in the required fields: *title*, *description*, *price*, "
+"*category*, *location*.\n"
+"\n"
+"3️⃣ Upload *photos* of the product you are selling.\n"
+"\n"
+"4️⃣ Click on the *\"📤 Post\"* button to publish the ad.\n"
+"\n"
+"5️⃣ Wait for the ad to be *approved* by the moderator.\n"
+"\n"
+"6️⃣ Once the ad is approved, it will be available for viewing by other "
+"users."
+
+#: src/routes/faq.py:61
+msgid ""
+"❕ *What is the cost of advertising?*\n"
+"\n"
+"🔹 The cost of advertising on the platform is *free*.\n"
+"\n"
+"🔹 You can post an unlimited number of ads without any restrictions."
+msgstr ""
+"❕ *What is the cost of advertising?*\n"
+"\n"
+"🔹 The cost of advertising on the platform is *free*.\n"
+"\n"
+"🔹 You can post an unlimited number of ads without any restrictions."
+
+#: src/routes/faq.py:87
+msgid ""
+"❕ *What we do with your ads?*\n"
+"\n"
+"🔹 We *moderate* all ads before they are published on the platform.\n"
+"\n"
+"🔹 We *check* the ad for compliance with the rules of the platform.\n"
+"\n"
+"🔹 We *approve* the ad if it meets the requirements."
+msgstr ""
+"❕ *What we do with your ads?*\n"
+"\n"
+"🔹 We *moderate* all ads before they are published on the platform.\n"
+"\n"
+"🔹 We *check* the ad for compliance with the rules of the platform.\n"
+"\n"
+"🔹 We *approve* the ad if it meets the requirements."
+
+#: src/routes/faq.py:128
+msgid ""
+"📚 *FAQ*\n"
+"\n"
+"👇 Here you can find answers to frequently asked questions.\n"
+"\n"
+"🔹 *How to advertise on the platform?*\n"
+"🔹 *What is the cost of advertising?*\n"
+"🔹 *What we do with your ads?*\n"
+"👇 *Choose a question* to get an answer."
+msgstr ""
+"📚 *FAQ*\n"
+"\n"
+"👇 Here you can find answers to frequently asked questions.\n"
+"\n"
+"🔹 *How to advertise on the platform?*\n"
+"🔹 *What is the cost of advertising?*\n"
+"🔹 *What we do with your ads?*\n"
+"👇 *Choose a question* to get an answer."
+
+#: src/routes/faq.py:139
+msgid "🔹 How to advertise on the platform?"
+msgstr "🔹 How to advertise on the platform?"
+
+#: src/routes/faq.py:142
+msgid "🔹 What is the cost of advertising?"
+msgstr "🔹 What is the cost of advertising?"
+
+#: src/routes/faq.py:145
+msgid "🔹 What we do with your ads?"
+msgstr "🔹 What we do with your ads?"
+
+#: src/routes/home.py:30
+msgid ""
+"👋 Hello, *{username}*.\n"
+"I'm *Seller — curator of your ads*.\n"
+"\n"
+"🌟 Here you can post your *ads* for *selling* your product."
+msgstr ""
+"👋 Hello, *{username}*.\n"
+"I'm *Seller — curator of your ads*.\n"
+"\n"
+"🌟 Here you can post your *ads* for *selling* your product."
+
+#: src/routes/home.py:36
+msgid "📤 Post an ad"
+msgstr "📤 Post an ad"
+
+#: src/routes/home.py:36
+msgid "📦 My ads"
+msgstr "📦 My ads"
+
+#: src/routes/home.py:37
+msgid "🌐 Language"
+msgstr "🌐 Language"
+
+#: src/routes/home.py:42 src/routes/home.py:97
+msgid "📦 Requested ads"
+msgstr "📦 Requested ads"
+
+#: src/routes/home.py:42 src/routes/home.py:95
+msgid "📜 Error logs"
+msgstr "📜 Error logs"
+
+#: src/routes/home.py:44 src/routes/home.py:93
+msgid "📝 Manage Categories"
+msgstr "📝 Manage Categories"
+
+#: src/routes/home.py:44 src/routes/home.py:99
+msgid "📊 Statistics"
+msgstr "📊 Statistics"
+
+#: src/routes/home.py:88
+msgid "❌ You do not have access to this command."
+msgstr "❌ You do not have access to this command."
+
+#: src/routes/language.py:24
+msgid "🌐 *Select your language*"
+msgstr "🌐 *Select your language*"
+
+#: src/routes/language.py:55
+msgid ""
+"🌐 *Language successfully changed.*\n"
+"\n"
+"🔄 Restarting the bot..."
+msgstr ""
+"🌐 *Language successfully changed.*\n"
+"\n"
+"🔄 Restarting the bot..."
+
+#: src/routes/req_advertisements.py:41
+#, fuzzy
+msgid ""
+"📜 *Requested advertisements*.\n"
+"\n"
+"Select an advertisement to moderate."
+msgstr ""
+"📜 *Requested advertisements*.\n"
+"\n"
+"Select an advertisement to moderate."
+
+#: src/routes/req_advertisements.py:68
+msgid "❌ Advertisement not found."
+msgstr "❌ Advertisement not found."
+
+#: src/routes/req_advertisements.py:103
+msgid "🎟 Please choose an action for this ad:"
+msgstr "🎟 Please choose an action for this ad:"
+
+#: src/routes/req_advertisements.py:124
+msgid "❌ Invalid callback data."
+msgstr "❌ Invalid callback data."
+
+#: src/routes/req_advertisements.py:131
+msgid "❌ Invalid advertisement ID."
+msgstr "❌ Invalid advertisement ID."
+
+#: src/routes/req_advertisements.py:137
+msgid "🔧 What would you like to do with this advertisement?"
+msgstr "🔧 What would you like to do with this advertisement?"
+
+#: src/routes/req_advertisements.py:144
+msgid "❌ Delete"
+msgstr "❌ Delete"
+
+#: src/routes/statistic.py:22
+msgid ""
+"📊 *Bot Statistics:*\n"
+"\n"
+"👥 Total users: {total_users}\n"
+"🆕 New users today: {new_users_today}\n"
+"🟢 Active users: {active_users}\n"
+"\n"
+"📄 Total advertisements: {total_advertisements}\n"
+"📈 Active advertisements: {active_advertisements}\n"
+"✅ Approved advertisements: {successful_advertisements}\n"
+"❌ Deleted advertisements: {deleted_advertisements}\n"
+"\n"
+"📁 Total categories: {total_categories}\n"
+"🔥 Popular categories:\n"
+"{popular_categories_text}\n"
+"⏱ Average response time: {response_time_avg:.2f} seconds\n"
+msgstr ""
+"📊 *Bot Statistics:*\n"
+"\n"
+"👥 Total users: {total_users}\n"
+"🆕 New users today: {new_users_today}\n"
+"🟢 Active users: {active_users}\n"
+"\n"
+"📄 Total advertisements: {total_advertisements}\n"
+"📈 Active advertisements: {active_advertisements}\n"
+"✅ Approved advertisements: {successful_advertisements}\n"
+"❌ Deleted advertisements: {deleted_advertisements}\n"
+"\n"
+"📁 Total categories: {total_categories}\n"
+"🔥 Popular categories:\n"
+"{popular_categories_text}\n"
+"⏱ Average response time: {response_time_avg:.2f} seconds\n"
+
+#: src/routes/user_advertisements.py:58
+msgid ""
+"📦 *Your ads*.\n"
+"\n"
+"Select a category to view your ads."
+msgstr ""
+"📦 *Your ads*.\n"
+"\n"
+"Select a category to view your ads."
+
+#: src/routes/user_advertisements.py:67
+msgid "🟢 Approved ads"
+msgstr "🟢 Approved ads"
+
+#: src/routes/user_advertisements.py:68
+msgid "🟡 Pending ads"
+msgstr "🟡 Pending ads"
+
+#: src/routes/user_advertisements.py:69
+msgid "🔴 Rejected ads"
+msgstr "🔴 Rejected ads"
+
+#: src/routes/user_advertisements.py:88
+msgid "🫢 No ads found in this category."
+msgstr "🫢 No ads found in this category."
+
+#: src/routes/user_advertisements.py:90
+msgid "Back"
+msgstr "Back"
+
+#: src/routes/user_advertisements.py:105
+msgid ""
+"📦 *Your ads*.\n"
+"\n"
+"Select an advertisement to manage."
+msgstr ""
+"📦 *Your ads*.\n"
+"\n"
+"Select an advertisement to manage."
+
+#: src/routes/user_advertisements.py:141
+msgid "Ad deleted."
+msgstr "Ad deleted."
+
+#: src/schemas/advertisement.py:17
+msgid "The {field} should match the pattern '{pattern}'"
+msgstr "The {field} should match the pattern '{pattern}'"
+
+#: src/schemas/advertisement.py:20
+msgid "The {field} field has an invalid value."
+msgstr "The {field} field has an invalid value."
+
+#: src/schemas/advertisement.py:22
+msgid "The {field} field must be greater than {limit_value}"
+msgstr "The {field} field must be greater than {limit_value}"
+
+#: src/schemas/advertisement.py:26
+msgid "Error: "
+msgstr "Error: "
+
+#: src/schemas/advertisement.py:26
+msgid "msg"
+msgstr "msg"
+
+#: src/schemas/advertisement.py:57
+msgid "Title cannot be empty or whitespace-only."
+msgstr "Title cannot be empty or whitespace-only."
+
+#: src/schemas/advertisement.py:59
+msgid "Title contains invalid characters."
+msgstr "Title contains invalid characters."
+
+#: src/schemas/advertisement.py:66
+msgid "Description cannot be empty or whitespace-only."
+msgstr "Description cannot be empty or whitespace-only."
+
+#: src/schemas/advertisement.py:68
+msgid "Description contains invalid characters."
+msgstr "Description contains invalid characters."
+
+#: src/schemas/advertisement.py:75
+msgid "Reason cannot be empty or whitespace-only."
+msgstr "Reason cannot be empty or whitespace-only."
+
+#: src/schemas/advertisement.py:77
+msgid "Reason contains invalid characters."
+msgstr "Reason contains invalid characters."
+
+#: src/schemas/advertisement.py:84
+msgid "Price must be a decimal."
+msgstr "Price must be a decimal."
+
+#: src/schemas/advertisement.py:86
+msgid "Price must be positive."
+msgstr "Price must be positive."
+
+#: src/utils/helpers.py:61
+msgid "⬅️ Prev"
+msgstr "⬅️ Prev"
+
+#: src/utils/helpers.py:65
+msgid "Next ➡️"
+msgstr "Next ➡️"
+
+#: src/utils/helpers.py:80
+msgid "⬅️ Back"
+msgstr "⬅️ Back"
+
+#: src/utils/helpers.py:88
+msgid "🏠 Home"
+msgstr "🏠 Home"
+
+#: src/utils/helpers.py:119
+msgid "📷 Media"
+msgstr "📷 Media"
+
+#: src/utils/helpers.py:121
+msgid "📝 Title"
+msgstr "📝 Title"
+
+#: src/utils/helpers.py:123
+msgid "📄 Description"
+msgstr "📄 Description"
+
+#: src/utils/helpers.py:125
+msgid "💡 Reason for Selling"
+msgstr "💡 Reason for Selling"
+
+#: src/utils/helpers.py:127
+msgid "💰 Price"
+msgstr "💰 Price"
+
+#: src/utils/helpers.py:129
+msgid "📞 Contact Information"
+msgstr "📞 Contact Information"
+
+#: src/utils/helpers.py:131
+msgid "📍 Location"
+msgstr "📍 Location"
+
+#: src/utils/helpers.py:133
+msgid "🏷️ Hashtags"
+msgstr "🏷️ Hashtags"
+
+#~ msgid ""
+#~ "📊 *Bot Statistics:*\n"
+#~ "\n"
+#~ "\n"
+#~ "\n"
+#~ msgstr ""
+#~ "📊 *Bot Statistics:*\n"
+#~ "\n"
+#~ "\n"
+#~ "\n"
 

@@ -84,17 +84,17 @@ class Application:
         retry_delay = 1
         max_delay = 60
 
-        while True:
+        while retry_delay <= max_delay:
             try:
                 await self.__dispatcher.start_polling(self.__bot)
+                break  # Exit loop if polling starts successfully
             except TelegramNetworkError as e:
                 print(f"Network error: {e}. Retrying in {retry_delay} seconds...")
-                await asyncio.sleep(retry_delay)
-                retry_delay = min(retry_delay * 2, max_delay)  # Exponential backoff
             except Exception as e:
                 print(f"Unexpected error: {e}. Retrying in {retry_delay} seconds...")
-                await asyncio.sleep(retry_delay)
-                retry_delay = min(retry_delay * 2, max_delay)  # Exponential backoff
+
+            await asyncio.sleep(retry_delay)
+            retry_delay = min(retry_delay * 2, max_delay)  # Exponential backoff
 
     def __init_exception_handler(self) -> None:
         """

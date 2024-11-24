@@ -264,14 +264,22 @@ async def finish_post_ad(message: Message, state: FSMContext) -> None:
     hashtags_text = await generate_hashtags(selected_category)
     location_text = await format_location(location)
 
-    ad_text = (
-        f"*Title:* {title}\n"
-        f"*Description:* {description}\n"
-        f"*Reason for Selling:* {reason}\n"
-        f"*Price:* {price} €\n\n"
-        f"*Contact Information:* {contact_info}\n"
-        f"*Location:* {location_text}\n\n"
-        f"{hashtags_text}"
+    ad_text = _(
+        "*Title:* {title}\n"
+        "*Description:* {description}\n"
+        "*Reason for Selling:* {reason}\n"
+        "*Price:* {price} €\n\n"
+        "*Contact Information:* {contact_info}\n"
+        "*Location:* {location_text}\n\n"
+        "{hashtags_text}"
+    ).format(
+        title=title,
+        description=description,
+        reason=reason,
+        price=price,
+        contact_info=contact_info,
+        location_text=location_text,
+        hashtags_text=hashtags_text
     )
 
     if media_files:
@@ -390,13 +398,13 @@ async def generate_hashtags(selected_category):
     :param selected_category: Dict
     :return: str
     """
-    category_ids = [int(cid) for cid in selected_category.get('path', '').split('.') if cid]
+    category_ids = map(int, filter(None, selected_category.get('path', '').split('.')))
     hashtags = []
 
     for category_id in category_ids:
         category = await CategoryService.get_category_by_id(category_id)
         for translation in category.get('translations', []):
-            hashtag = f"#{translation['name'].replace(' ', '_').replace('&', '')}"
+            hashtag = f"#{translation['name'].replace(' ', '_').replace('&', '').replace('-', '_')}_bse"
             hashtags.append(hashtag)
 
     return " ".join(hashtags)
@@ -513,15 +521,24 @@ async def send_ad_to_admin(advertisement, admin_id, bot: Bot):
     """
     hashtags = " ".join(advertisement.hashtags)
 
-    ad_text = (
-        f"*Title:* {advertisement.title}\n"
-        f"*Description:* {advertisement.description}\n"
-        f"*Reason for Selling:* {advertisement.reason}\n"
-        f"*Price:* {advertisement.price} €\n\n"
-        f"*Contact Information:* {advertisement.contact_info}\n"
-        f"*Location:* {advertisement.location}\n\n"
-        f"{hashtags}"
+    ad_text = _(
+        "*Title:* {advertisement_title}\n"
+        "*Description:* {advertisement_description}\n"
+        "*Reason for Selling:* {advertisement_reason}\n"
+        "*Price:* {advertisement_price} €\n\n"
+        "*Contact Information:* {advertisement_contact_info}\n"
+        "*Location:* {advertisement_location}\n\n"
+        "{hashtags}"
+    ).format(
+        advertisement_title=advertisement.title,
+        advertisement_description=advertisement.description,
+        advertisement_reason=advertisement.reason,
+        advertisement_price=advertisement.price,
+        advertisement_contact_info=advertisement.contact_info,
+        advertisement_location=advertisement.location,
+        hashtags=hashtags
     )
+
 
     media_group = await build_media_group(advertisement.id, ad_text)
 

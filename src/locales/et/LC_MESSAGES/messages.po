@@ -1,15 +1,15 @@
-# Estonian translations for PROJECT.
+# Estonian translations for .
 # Copyright (C) 2024 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# This file is distributed under the same license as the  project.
+# FIRST AUTHOR <mrne4to@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-10-14 13:54+0300\n"
-"PO-Revision-Date: 2024-10-14 13:57+0300\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version:  1.0\n"
+"Report-Msgid-Bugs-To: mrne4to@gmail.com\n"
+"POT-Creation-Date: 2024-11-24 14:19+0200\n"
+"PO-Revision-Date: 2024-11-24 13:24+0200\n"
+"Last-Translator: Vladislav Hodzhajev mrne4to@gmail.com\n"
 "Language: et\n"
 "Language-Team: et <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -18,77 +18,578 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: src/routes/advertisement.py:20 src/routes/home.py:97
+#: src/handlers/advertisement.py:29
+msgid "🚫 Unsupported media type."
+msgstr "🚫 Toetuseta meediatüüp."
+
+#: src/handlers/advertisement.py:33
+msgid "🚫 The file size must be less than 45 MB."
+msgstr "🚫 Faili suurus peab olema väiksem kui 45 MB."
+
+#: src/handlers/advertisement.py:41
+msgid "🚫 You can only upload up to 10 media files."
+msgstr "🚫 Saate üles laadida kuni 10 meediafaili."
+
+#: src/handlers/advertisement.py:43 src/handlers/advertisement.py:58
+msgid "✅ Finish"
+msgstr "✅ Lõpeta"
+
+#: src/handlers/advertisement.py:54
+msgid "📤 File uploaded. Do you want to add another media file?"
+msgstr "📤 Fail on üles laaditud. Kas soovite lisada veel meediafaili?"
+
+#: src/handlers/advertisement.py:56
+msgid "➕ Add more"
+msgstr "➕ Lisa veel"
+
+#: src/handlers/advertisement.py:68 src/handlers/advertisement.py:76
+#: src/handlers/advertisement.py:89 src/handlers/advertisement.py:105
+msgid "🚫 Invalid state."
+msgstr "🚫 Vigane olek."
+
+#: src/handlers/advertisement.py:80
+msgid "📤 Send the next media file (photo, video, document)."
+msgstr "📤 Saatke järgmine meediafail (foto, video, dokument)."
+
+#: src/handlers/advertisement.py:99
+msgid "🚫 No media files found."
+msgstr "🚫 Meediafaile ei leitud."
+
+#: src/handlers/advertisement.py:102
+msgid "✅ Media files have been successfully updated."
+msgstr "✅ Meediafailid on edukalt uuendatud."
+
+#: src/handlers/advertisement.py:147 src/routes/edit_advertisement.py:70
+msgid "📍 Share Location"
+msgstr "📍 Jaga asukohta"
+
+#: src/handlers/advertisement.py:152
+msgid "📍 Send me the *location* of the ad or type it manually."
+msgstr "📍 Saatke mulle kuulutuse *asukoht* või sisestage see käsitsi."
+
+#: src/handlers/advertisement.py:176
+msgid "📤 Video is being uploaded to the server..."
+msgstr "📤 Video laaditakse serverisse üles..."
+
+#: src/handlers/advertisement.py:184
+msgid "✅ Video has been successfully uploaded to the server."
+msgstr "✅ Video on edukalt serverisse üles laaditud."
+
+#: src/handlers/advertisement.py:194
+msgid ""
+"*Title:* {ad_title}\n"
+"*Description:* {ad_description}\n"
+"*Reason for Selling:* {ad_reason}\n"
+"*Price:* {ad_price} €\n"
+"*Contact Information:* {ad_contact_info}\n"
+"*Location:* {ad_location}\n"
+"{hashtags}"
+msgstr ""
+"*Pealkiri:* {ad_title}\n"
+"*Kirjeldus:* {ad_description}\n"
+"*Müügi põhjus:* {ad_reason}\n"
+"*Hind:* {ad_price} €\n"
+"*Kontaktandmed:* {ad_contact_info}\n"
+"*Asukoht:* {ad_location}\n"
+"{hashtags}"
+
+#: src/handlers/advertisement.py:228
+msgid "🗑 Delete"
+msgstr "🗑 Kustuta"
+
+#: src/handlers/advertisement.py:229 src/routes/req_advertisements.py:143
+msgid "✏️ Edit"
+msgstr "✏️ Muuda"
+
+#: src/handlers/advertisement.py:236 src/handlers/advertisement.py:241
+msgid "🎟 Please manage this ad:"
+msgstr "🎟 Palun haldage seda kuulutust:"
+
+#: src/middlewares/errors.py:42
+msgid ""
+"😕 *Oops!*\n"
+"\n"
+"Something went wrong while processing your request. Please try again "
+"later.\n"
+"\n"
+"Our team has been notified about this error."
+msgstr ""
+"😕 *Ups!*\n"
+"\n"
+"Midagi läks valesti teie päringu töötlemisel. Palun proovige hiljem uuesti."
+"\n"
+"\n"
+"Meie meeskond on selle vea kohta teavitatud."
+
+#: src/middlewares/errors.py:75
+msgid ""
+"💥 *A new error has occurred!*\n"
+"\n"
+"Exception log is attached below."
+msgstr ""
+"💥 *Uus viga on ilmnenud!*\n"
+"\n"
+"Erindlogi on allpool manustatud."
+
+#: src/routes/admin.py:64
+msgid "✅ Your ad has been approved and posted in the channel."
+msgstr "✅ Teie kuulutus on heaks kiidetud ja postitatud kanalisse."
+
+#: src/routes/admin.py:65
+msgid "✅ Advertisement approved."
+msgstr "✅ Kuulutus on heaks kiidetud."
+
+#: src/routes/admin.py:73
+msgid "🚫 Error while posting ad to channel."
+msgstr "🚫 Viga kuulutuse kanalisse postitamisel."
+
+#: src/routes/admin.py:83
+msgid "❌ Advertisement rejected."
+msgstr "❌ Kuulutus on tagasi lükatud."
+
+#: src/routes/admin.py:99
+msgid "🚫 Cannot find the user."
+msgstr "🚫 Kasutajat ei leitud."
+
+#: src/routes/admin.py:123 src/routes/advertisement.py:524
+#: src/routes/req_advertisements.py:72
+msgid ""
+"*Title:* {advertisement_title}\n"
+"*Description:* {advertisement_description}\n"
+"*Reason for Selling:* {advertisement_reason}\n"
+"*Price:* {advertisement_price} €\n"
+"\n"
+"*Contact Information:* {advertisement_contact_info}\n"
+"*Location:* {advertisement_location}\n"
+"\n"
+"{hashtags}"
+msgstr ""
+"*Pealkiri:* {advertisement_title}\n"
+"*Kirjeldus:* {advertisement_description}\n"
+"*Müügi põhjus:* {advertisement_reason}\n"
+"*Hind:* {advertisement_price} €\n"
+"\n"
+"*Kontaktandmed:* {advertisement_contact_info}\n"
+"*Asukoht:* {advertisement_location}\n"
+"\n"
+"{hashtags}"
+
+#: src/routes/advertisement.py:70
+msgid "🚫 Operation canceled."
+msgstr "🚫 Tegevus tühistatud."
+
+#: src/routes/advertisement.py:87
 msgid ""
 "📤 *Post an ad*\n"
 "\n"
 "📝 Send me the *title* of the ad.\n"
+"✍️ e.g. iPhone 16 Pro Max\n"
 "\n"
 "🚫 Send /cancel to cancel the operation."
 msgstr ""
-"📤 *Postita kuulutus*\n"
+"📤 *Avalda kuulutus*\n"
 "\n"
 "📝 Saada mulle kuulutuse *pealkiri*.\n"
+"✍️ nt. iPhone 16 Pro Max\n"
 "\n"
-"🚫 Saada /cancel, et tühistada toiming."
+"🚫 Saada /cancel, et tegevus katkestada."
 
-#: src/routes/advertisement.py:30
+#: src/routes/advertisement.py:111
 msgid ""
 "📤 *Post an ad*\n"
 "\n"
-"📝 Send me the *description* of the ad."
-msgstr ""
-"📤 *Postita kuulutus*\n"
+"📝 Send me the *description* of the ad.\n"
+"✍️ e.g. Brand new iPhone 16 Pro Max with 512GB.\n"
 "\n"
-"📝 Saada mulle kuulutuse *kirjeldus*."
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"📝 Saada mulle kuulutuse *kirjeldus*.\n"
+"✍️ nt. Täiesti uus iPhone 16 Pro Max 512GB-ga.\n"
+"\n"
+"🚫 Saada /cancel, et tegevus katkestada."
 
-#: src/routes/advertisement.py:39
+#: src/routes/advertisement.py:135
 msgid ""
 "📤 *Post an ad*\n"
 "\n"
-"💵 Send me the *price* of the ad."
-msgstr ""
-"📤 *Postita kuulutus*\n"
+"📝 Please provide the *reason for selling*.\n"
+"✍️ e.g. I need money for my tuition fees.\n"
 "\n"
-"💵 Saada mulle kuulutuse *hind*."
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"📝 Palun andke teada *müügi põhjus*.\n"
+"✍️ nt. Vajan raha õppemaksu jaoks.\n"
+"\n"
+"🚫 Saada /cancel, et tegevus katkestada."
 
-#: src/routes/category.py:32 src/routes/category.py:103
+#: src/routes/advertisement.py:159
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"💵 Send me the *price* of the ad in euro.\n"
+"✍️ e.g. 699.99\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"💵 Saada mulle kuulutuse *hind* eurodes.\n"
+"✍️ nt. 699.99\n"
+"\n"
+"🚫 Saada /cancel, et tegevus katkestada."
+
+#: src/routes/advertisement.py:185
+msgid "💵 Please enter a valid price with 2 decimal places."
+msgstr "💵 Palun sisestage kehtiv hind kahe kümnendkohaga."
+
+#: src/routes/advertisement.py:222
+msgid "📎 Send me the *contact information* of the ad."
+msgstr "📎 Saada mulle kuulutuse *kontaktandmed*."
+
+#: src/routes/advertisement.py:239
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"☕️ *Please wait while I process your ad...*"
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"☕️ *Palun oodake, kuni ma teie kuulutust töötlen...*"
+
+#: src/routes/advertisement.py:267
+msgid ""
+"*Title:* {title}\n"
+"*Description:* {description}\n"
+"*Reason for Selling:* {reason}\n"
+"*Price:* {price} €\n"
+"\n"
+"*Contact Information:* {contact_info}\n"
+"*Location:* {location_text}\n"
+"\n"
+"{hashtags_text}"
+msgstr ""
+"*Pealkiri:* {title}\n"
+"*Kirjeldus:* {description}\n"
+"*Müügi põhjus:* {reason}\n"
+"*Hind:* {price} €\n"
+"\n"
+"*Kontaktandmed:* {contact_info}\n"
+"*Asukoht:* {location_text}\n"
+"\n"
+"{hashtags_text}"
+
+#: src/routes/advertisement.py:301
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 *Please confirm the details of your ad.*"
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"👍 *Palun kinnitage oma kuulutuse üksikasjad.*"
+
+#: src/routes/advertisement.py:304 src/routes/category.py:247
+msgid "✅ Confirm"
+msgstr "✅ Kinnita"
+
+#: src/routes/advertisement.py:305
+msgid "🚫 Cancel"
+msgstr "🚫 Tühista"
+
+#: src/routes/advertisement.py:321
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"👍 Your ad has been *successfully submitted for moderation*.\n"
+"\n"
+"🔍 You can check the *status* of your ad through the \"My Ads\" button in "
+"the ReplyKeyboard when you use the /start command.\n"
+"\n"
+"✅ If your ad *passes the moderation*, it will be *posted in the group* "
+"and you will be *notified immediately*.\n"
+"\n"
+"❌ If your ad *does not pass* the moderation, *you will be notified* as "
+"well."
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"👍 Teie kuulutus on *edukalt saadetud modereerimisele*.\n"
+"\n"
+"🔍 Saate kontrollida oma kuulutuse *olekut* nupu \"Minu kuulutused\" "
+"kaudu, kui kasutate käsku /start.\n"
+"\n"
+"✅ Kui teie kuulutus *läbib modereerimise*, siis see *postitatakse gruppi*"
+" ja teid *teavitatakse kohe*.\n"
+"\n"
+"❌ Kui teie kuulutus *ei läbi* modereerimist, siis *teid teavitatakse* "
+"samuti."
+
+#: src/routes/advertisement.py:383
+msgid ""
+"🚫 *Ad Submission Canceled*\n"
+"\n"
+"Your ad submission has been *canceled*.\n"
+"\n"
+"To submit a new ad, please start the process again by selecting the \"📤 "
+"Post an ad\" button in the main menu.\n"
+"\n"
+"We look forward to seeing your ad soon! 😊"
+msgstr ""
+"🚫 *Kuulutuse esitamine tühistatud*\n"
+"\n"
+"Teie kuulutuse esitamine on *tühistatud*.\n"
+"\n"
+"Uue kuulutuse esitamiseks alustage protsessi uuesti, valides põhimenüüst "
+"nupu \"📤 Avalda kuulutus\".\n"
+"\n"
+"Ootame teie kuulutust varsti! 😊"
+
+#: src/routes/advertisement.py:422 src/routes/advertisement.py:426
+msgid "Unknown location"
+msgstr "Teadmata asukoht"
+
+#: src/routes/advertisement.py:549 src/routes/req_advertisements.py:94
+msgid "✅ Approve"
+msgstr "✅ Kinnita"
+
+#: src/routes/advertisement.py:550 src/routes/req_advertisements.py:95
+msgid "🔧 Manage"
+msgstr "🔧 Halda"
+
+#: src/routes/advertisement.py:551 src/routes/req_advertisements.py:96
+msgid "❌ Reject"
+msgstr "❌ Lükka tagasi"
+
+#: src/routes/advertisement.py:561
+msgid "🎟 Please approve or reject this ad:"
+msgstr "🎟 Palun kinnitage või lükake tagasi see kuulutus:"
+
+#: src/routes/category.py:94
 msgid "No categories found."
 msgstr "Kategooriaid ei leitud."
 
-#: src/routes/category.py:83
-msgid "🔍 Search"
-msgstr "🔍 Otsi"
+#: src/routes/category.py:149
+msgid "🔍 Search categories"
+msgstr "🔍 Otsi kategooriaid"
 
-#: src/routes/category.py:91 src/utils/helpers.py:72
-msgid "⬅️ Back"
-msgstr "⬅️ Tagasi"
-
-#: src/routes/category.py:96
-msgid "➡️ Forward"
-msgstr "➡️ Edasi"
-
-#: src/routes/category.py:118
+#: src/routes/category.py:161
 msgid "Please select a category:"
-msgstr "Palun vali kategooria:"
+msgstr "Palun valige kategooria:"
 
-#: src/routes/category.py:152
+#: src/routes/category.py:189
 msgid "Category not found."
 msgstr "Kategooriat ei leitud."
 
-#: src/routes/category.py:168
-msgid "Category selected."
-msgstr "Kategooria valitud."
+#: src/routes/category.py:209
+msgid "➡️ Go to child categories"
+msgstr "➡️ Mine alamkategooriatesse"
 
-#: src/routes/category.py:178
+#: src/routes/category.py:212
+msgid "✅ Confirm category (Don't use in Category Edit)"
+msgstr "✅ Kinnita kategooria (Ära kasuta kategooria muutmisel)"
+
+#: src/routes/category.py:214
+msgid "🔄 Toggle category status"
+msgstr "🔄 Muuda kategooria staatust"
+
+#: src/routes/category.py:217 src/routes/category.py:248
+#: src/routes/edit_advertisement.py:76
+msgid "❌ Cancel"
+msgstr "❌ Tühista"
+
+#: src/routes/category.py:224
+msgid ""
+"You have selected the category: {category_name}\n"
+"Choose an action:"
+msgstr ""
+"Olete valinud kategooria: {category_name}\n"
+"Valige tegevus:"
+
+#: src/routes/category.py:252
+msgid ""
+"You have selected the category: {category_name}\n"
+"\n"
+"✅ Confirm your selection:"
+msgstr ""
+"Olete valinud kategooria: {category_name}\n"
+"\n"
+"✅ Kinnitage oma valik:"
+
+#: src/routes/category.py:271
+msgid ""
+"⏳ Processing, please wait...\n"
+"\n"
+" It may take a while."
+msgstr ""
+"⏳ Töötlemine, palun oodake...\n"
+"\n"
+" See võib võtta aega."
+
+#: src/routes/category.py:278
+msgid "Unknown action."
+msgstr "Teadmata tegevus."
+
+#: src/routes/category.py:299
+msgid "✅ Category status updated."
+msgstr "✅ Kategooria staatus on uuendatud."
+
+#: src/routes/category.py:314
+msgid "An error occurred while updating the category status."
+msgstr "Viga kategooria staatuse uuendamisel."
+
+#: src/routes/category.py:327
+msgid "Action canceled."
+msgstr "Tegevus tühistatud."
+
+#: src/routes/category.py:346
+msgid "Please select a category first."
+msgstr "Palun valige esmalt kategooria."
+
+#: src/routes/category.py:351
+msgid ""
+"📤 *Post an ad*\n"
+"\n"
+"📸 Send me the *media* of the ad.\n"
+"\n"
+"❗️ Limit per one file - *45 MB*\n"
+"\n"
+"🚫 Send /cancel to cancel the operation."
+msgstr ""
+"📤 *Avalda kuulutus*\n"
+"\n"
+"📸 Saada mulle kuulutuse *meedia*.\n"
+"\n"
+"❗️ Ühe faili piirang - *45 MB*\n"
+"\n"
+"🚫 Saada /cancel, et tegevus katkestada."
+
+#: src/routes/category.py:366
 msgid "Please enter your search query:"
-msgstr "Palun sisesta oma otsingupäring:"
+msgstr "Palun sisestage oma otsingupäring:"
 
-#: src/routes/category.py:192
+#: src/routes/category.py:381
 msgid "Please enter a valid search query."
-msgstr "Palun sisesta kehtiv otsingupäring."
+msgstr "Palun sisestage kehtiv otsingupäring."
 
-#: src/routes/faq.py:34
+#: src/routes/edit_advertisement.py:23
+msgid "🛠️ What field would you like to edit? Please choose an option below:"
+msgstr "🛠️ Millist välja soovite muuta? Palun valige allolevatest valikutest:"
+
+#: src/routes/edit_advertisement.py:37
+msgid "📷 Please send me a new photo or video for this advertisement."
+msgstr "📷 Palun saatke mulle selle kuulutuse uus foto või video."
+
+#: src/routes/edit_advertisement.py:38
+msgid "📝 Please send me a new title for this advertisement."
+msgstr "📝 Palun saatke mulle selle kuulutuse uus pealkiri."
+
+#: src/routes/edit_advertisement.py:39
+msgid "📄 Please send me a new description for this advertisement."
+msgstr "📄 Palun saatke mulle selle kuulutuse uus kirjeldus."
+
+#: src/routes/edit_advertisement.py:40
+msgid "💰 Please send me a new price for this advertisement."
+msgstr "💰 Palun saatke mulle selle kuulutuse uus hind."
+
+#: src/routes/edit_advertisement.py:41
+msgid "📝 Please send me a new reason for selling this item."
+msgstr "📝 Palun saatke mulle selle eseme müümise uus põhjus."
+
+#: src/routes/edit_advertisement.py:43
+msgid "📞 Please send me new contact information for this advertisement."
+msgstr "📞 Palun saatke mulle selle kuulutuse uued kontaktandmed."
+
+#: src/routes/edit_advertisement.py:44
+msgid "📍 Please send me a new location for this advertisement."
+msgstr "📍 Palun saatke mulle selle kuulutuse uus asukoht."
+
+#: src/routes/edit_advertisement.py:45
+msgid "📦 Please send me a new category for this advertisement."
+msgstr "📦 Palun saatke mulle selle kuulutuse uus kategooria."
+
+#: src/routes/edit_advertisement.py:46
+msgid "🔖 Please send me new hashtags for this advertisement."
+msgstr "🔖 Palun saatke mulle selle kuulutuse uued hashtagid."
+
+#: src/routes/edit_advertisement.py:58
+msgid "Unknown field."
+msgstr "Teadmata väli."
+
+#: src/routes/edit_advertisement.py:104
+msgid "has been successfully updated."
+msgstr "on edukalt uuendatud."
+
+#: src/routes/edit_advertisement.py:108
+msgid "🙇‍♂️ Failed to update the advertisement field."
+msgstr "🙇‍♂️ Ei õnnestunud kuulutuse välja uuendada."
+
+#: src/routes/edit_advertisement.py:135
+msgid "Please share your location."
+msgstr "Palun jagage oma asukohta."
+
+#: src/routes/edit_advertisement.py:140
+msgid "📍 Location has been successfully updated."
+msgstr "📍 Asukoht on edukalt uuendatud."
+
+#: src/routes/edit_advertisement.py:144
+msgid "🙇‍♂️ Failed to update the location."
+msgstr "🙇‍♂️ Ei õnnestunud asukohta uuendada."
+
+#: src/routes/exception_logs.py:35 src/routes/exception_logs.py:41
+msgid ""
+"📜 *Error logs*.\n"
+"\n"
+"No logs found."
+msgstr ""
+"📜 *Vigade logid*.\n"
+"\n"
+"Vigade logisid ei leitud."
+
+#: src/routes/exception_logs.py:57
+msgid ""
+"📜 *Error logs*.\n"
+"\n"
+"Select a log to view."
+msgstr ""
+"📜 *Vigade logid*.\n"
+"\n"
+"Valige logi vaatamiseks."
+
+#: src/routes/exception_logs.py:69
+msgid "⬅️ Previous"
+msgstr "⬅️ Eelmine"
+
+#: src/routes/exception_logs.py:74
+msgid "➡️ Next"
+msgstr "➡️ Järgmine"
+
+#: src/routes/exception_logs.py:79
+msgid "🗑 Delete all logs"
+msgstr "🗑 Kustuta kõik logid"
+
+#: src/routes/exception_logs.py:113
+msgid ""
+"📜 *Error log*.\n"
+"\n"
+"Log file is attached below."
+msgstr ""
+"📜 *Vigade logi*.\n"
+"\n"
+"Logifail on allolevalt manustatud."
+
+#: src/routes/exception_logs.py:156
+msgid "📜 No logs found."
+msgstr "📜 Logisid ei leitud."
+
+#: src/routes/exception_logs.py:186
+msgid "📜 Log not found."
+msgstr "📜 Logi ei leitud."
+
+#: src/routes/faq.py:33
 msgid ""
 "❕ *How to advertise on the platform?*\n"
 "\n"
@@ -107,21 +608,24 @@ msgid ""
 "6️⃣ Once the ad is approved, it will be available for viewing by other "
 "users."
 msgstr ""
-"❕ *Kuidas platvormil reklaamida?*\n"
+"❕ *Kuidas reklaamida platvormil?*\n"
 "\n"
-"1️⃣ Klõpsa peamenüüs nupule *\"📤 Postita kuulutus\"*, et alustada kuulutuse postitamist.\n"
+"1️⃣ Klõpsake põhimenüüs nupul *\"📤 Avalda kuulutus\"*, et alustada "
+"kuulutuse postitamist.\n"
 "\n"
-"2️⃣ Täida nõutud väljad: *pealkiri*, *kirjeldus*, *hind*, *kategooria*, *asukoht*.\n"
+"2️⃣ Täitke vajalikud väljad: *pealkiri*, *kirjeldus*, *hind*, "
+"*kategooria*, *asukoht*.\n"
 "\n"
-"3️⃣ Laadi üles müüdava toote *fotod*.\n"
+"3️⃣ Laadige üles *toote fotod*, mida müüte.\n"
 "\n"
-"4️⃣ Klõpsa nupule *\"📤 Postita\"*, et kuulutus avaldada.\n"
+"4️⃣ Klõpsake kuulutuse postimiseks nupul *\"📤 Post\"*.\n"
 "\n"
-"5️⃣ Oota, kuni kuulutus on *moderaatori poolt heaks kiidetud*.\n"
+"5️⃣ Oodake, kuni kuulutus on moderaatori poolt *heaks kiidetud*.\n"
 "\n"
-"6️⃣ Kui kuulutus on heaks kiidetud, on see teistele kasutajatele nähtav."
+"6️⃣ Kui kuulutus on heaks kiidetud, on see teiste kasutajate vaatamiseks "
+"saadaval."
 
-#: src/routes/faq.py:63
+#: src/routes/faq.py:61
 msgid ""
 "❕ *What is the cost of advertising?*\n"
 "\n"
@@ -129,13 +633,13 @@ msgid ""
 "\n"
 "🔹 You can post an unlimited number of ads without any restrictions."
 msgstr ""
-"❕ *Mis on reklaami maksumus?*\n"
+"❕ *Mis on reklaamimise maksumus?*\n"
 "\n"
-"🔹 Reklaami postitamine platvormil on *tasuta*.\n"
+"🔹 Reklaamimine platvormil on *tasuta*.\n"
 "\n"
-"🔹 Sa võid postitada piiramatul hulgal kuulutusi ilma piiranguteta."
+"🔹 Võite postitada piiramatul arvu kuulutusi ilma piiranguteta."
 
-#: src/routes/faq.py:90
+#: src/routes/faq.py:87
 msgid ""
 "❕ *What we do with your ads?*\n"
 "\n"
@@ -147,13 +651,13 @@ msgid ""
 msgstr ""
 "❕ *Mida me teeme teie kuulutustega?*\n"
 "\n"
-"🔹 Me *modereerime* kõiki kuulutusi enne nende avaldamist platvormil.\n"
+"🔹 Me *modereerime* kõik kuulutused enne nende avaldamist platvormil.\n"
 "\n"
-"🔹 Me *kontrollime* kuulutust, et see vastaks platvormi reeglitele.\n"
+"🔹 Me *kontrollime* kuulutuse vastavust platvormi reeglitele.\n"
 "\n"
-"🔹 Me *kinnitame* kuulutuse, kui see vastab nõuetele."
+"🔹 Me *heaks kiidame* kuulutuse, kui see vastab nõuetele."
 
-#: src/routes/faq.py:133
+#: src/routes/faq.py:128
 msgid ""
 "📚 *FAQ*\n"
 "\n"
@@ -164,28 +668,28 @@ msgid ""
 "🔹 *What we do with your ads?*\n"
 "👇 *Choose a question* to get an answer."
 msgstr ""
-"📚 *KKK*\n"
+"📚 *Korduma kippuvad küsimused (FAQ)*\n"
 "\n"
-"👇 Siit leiad vastused korduma kippuvatele küsimustele.\n"
+"👇 Siit leiate vastused sageli esitatud küsimustele.\n"
 "\n"
-"🔹 *Kuidas platvormil reklaamida?*\n"
-"🔹 *Mis on reklaami maksumus?*\n"
+"🔹 *Kuidas reklaamida platvormil?*\n"
+"🔹 *Mis on reklaamimise maksumus?*\n"
 "🔹 *Mida me teeme teie kuulutustega?*\n"
-"👇 *Vali küsimus*, et saada vastus."
+"👇 *Valige küsimus*, et saada vastus."
 
-#: src/routes/faq.py:144
+#: src/routes/faq.py:139
 msgid "🔹 How to advertise on the platform?"
-msgstr "🔹 Kuidas platvormil reklaamida?"
+msgstr "🔹 Kuidas reklaamida platvormil?"
 
-#: src/routes/faq.py:147
+#: src/routes/faq.py:142
 msgid "🔹 What is the cost of advertising?"
-msgstr "🔹 Mis on reklaami maksumus?"
+msgstr "🔹 Mis on reklaamimise maksumus?"
 
-#: src/routes/faq.py:150
+#: src/routes/faq.py:145
 msgid "🔹 What we do with your ads?"
 msgstr "🔹 Mida me teeme teie kuulutustega?"
 
-#: src/routes/home.py:22
+#: src/routes/home.py:30
 msgid ""
 "👋 Hello, *{username}*.\n"
 "I'm *Seller — curator of your ads*.\n"
@@ -193,64 +697,277 @@ msgid ""
 "🌟 Here you can post your *ads* for *selling* your product."
 msgstr ""
 "👋 Tere, *{username}*.\n"
-"Olen *Müüja — teie kuulutuste kuraator*.\n"
+"Mina olen *Seller — teie kuulutuste haldaja*.\n"
 "\n"
 "🌟 Siin saate postitada oma *kuulutusi* oma toote *müümiseks*."
 
-#: src/routes/home.py:28 src/routes/home.py:90
+#: src/routes/home.py:36
 msgid "📤 Post an ad"
-msgstr "📤 Postita kuulutus"
+msgstr "📤 Avalda kuulutus"
 
-#: src/routes/home.py:28
+#: src/routes/home.py:36
 msgid "📦 My ads"
 msgstr "📦 Minu kuulutused"
 
-#: src/routes/home.py:29
+#: src/routes/home.py:37
 msgid "🌐 Language"
 msgstr "🌐 Keel"
 
-#: src/routes/home.py:34 src/routes/home.py:104 src/routes/home.py:117
+#: src/routes/home.py:42 src/routes/home.py:97
 msgid "📦 Requested ads"
-msgstr "📦 Nõutud kuulutused"
+msgstr "📦 Taotletud kuulutused"
 
-#: src/routes/home.py:34 src/routes/home.py:105 src/routes/home.py:115
-#: src/routes/home.py:131
+#: src/routes/home.py:42 src/routes/home.py:95
 msgid "📜 Error logs"
-msgstr "📜 Vealogid"
+msgstr "📜 Vigade logid"
 
-#: src/routes/home.py:36 src/routes/home.py:78
+#: src/routes/home.py:44 src/routes/home.py:93
 msgid "📝 Manage Categories"
 msgstr "📝 Halda kategooriaid"
 
-#: src/routes/home.py:36
+#: src/routes/home.py:44 src/routes/home.py:99
 msgid "📊 Statistics"
 msgstr "📊 Statistika"
 
-#: src/routes/home.py:87 src/routes/home.py:112
+#: src/routes/home.py:88
 msgid "❌ You do not have access to this command."
-msgstr "❌ Teil pole sellele käsule juurdepääsu."
+msgstr "❌ Teil pole selle käsu kasutamiseks luba."
 
-#: src/routes/home.py:99
-msgid "🚫 Cancel"
-msgstr "🚫 Tühista"
+#: src/routes/language.py:24
+msgid "🌐 *Select your language*"
+msgstr "🌐 *Valige oma keel*"
 
-#: src/routes/home.py:118
-msgid "🚧 This feature is under construction"
-msgstr "🚧 See funktsioon on väljatöötamisel"
+#: src/routes/language.py:55
+msgid ""
+"🌐 *Language successfully changed.*\n"
+"\n"
+"🔄 Restarting the bot..."
+msgstr ""
+"🌐 *Keel on edukalt muudetud.*\n"
+"\n"
+"🔄 Taaskäivitan boti..."
 
-#: src/routes/home.py:134 src/routes/home.py:140
-msgid "Logs feature is under construction."
-msgstr "Logide funktsioon on väljatöötamisel."
+#: src/routes/req_advertisements.py:41
+#, fuzzy
+msgid ""
+"📜 *Requested advertisements*.\n"
+"\n"
+"Select an advertisement to moderate."
+msgstr ""
+"📜 *Taotletud kuulutused*.\n"
+"\n"
+"Valige kuulutus modereerimiseks."
 
-#: src/utils/helpers.py:53
+#: src/routes/req_advertisements.py:68
+msgid "❌ Advertisement not found."
+msgstr "❌ Kuulutust ei leitud."
+
+#: src/routes/req_advertisements.py:103
+msgid "🎟 Please choose an action for this ad:"
+msgstr "🎟 Palun valige tegevus selle kuulutuse jaoks:"
+
+#: src/routes/req_advertisements.py:124
+msgid "❌ Invalid callback data."
+msgstr "❌ Vigane tagasilükkamise andmed."
+
+#: src/routes/req_advertisements.py:131
+msgid "❌ Invalid advertisement ID."
+msgstr "❌ Vigane kuulutuse ID."
+
+#: src/routes/req_advertisements.py:137
+msgid "🔧 What would you like to do with this advertisement?"
+msgstr "🔧 Mida soovite selle kuulutusega teha?"
+
+#: src/routes/req_advertisements.py:144
+msgid "❌ Delete"
+msgstr "❌ Kustuta"
+
+#: src/routes/statistic.py:22
+msgid ""
+"📊 *Bot Statistics:*\n"
+"\n"
+"👥 Total users: {total_users}\n"
+"🆕 New users today: {new_users_today}\n"
+"🟢 Active users: {active_users}\n"
+"\n"
+"📄 Total advertisements: {total_advertisements}\n"
+"📈 Active advertisements: {active_advertisements}\n"
+"✅ Approved advertisements: {successful_advertisements}\n"
+"❌ Deleted advertisements: {deleted_advertisements}\n"
+"\n"
+"📁 Total categories: {total_categories}\n"
+"🔥 Popular categories:\n"
+"{popular_categories_text}\n"
+"⏱ Average response time: {response_time_avg:.2f} seconds\n"
+msgstr ""
+"📊 *Boti statistika:*\n"
+"\n"
+"👥 Kokku kasutajaid: {total_users}\n"
+"🆕 Uusi kasutajaid täna: {new_users_today}\n"
+"🟢 Aktiivseid kasutajaid: {active_users}\n"
+"\n"
+"📄 Kokku kuulutusi: {total_advertisements}\n"
+"📈 Aktiivseid kuulutusi: {active_advertisements}\n"
+"✅ Heaks kiidetud kuulutusi: {successful_advertisements}\n"
+"❌ Kustutatud kuulutusi: {deleted_advertisements}\n"
+"\n"
+"📁 Kokku kategooriaid: {total_categories}\n"
+"🔥 Populaarsed kategooriad:\n"
+"{popular_categories_text}\n"
+"⏱ Keskmise vastusaja: {response_time_avg:.2f} sekundit\n"
+
+#: src/routes/user_advertisements.py:58
+msgid ""
+"📦 *Your ads*.\n"
+"\n"
+"Select a category to view your ads."
+msgstr ""
+"📦 *Teie kuulutused*.\n"
+"\n"
+"Valige kategooria, et vaadata oma kuulutusi."
+
+#: src/routes/user_advertisements.py:67
+msgid "🟢 Approved ads"
+msgstr "🟢 Heaks kiidetud kuulutused"
+
+#: src/routes/user_advertisements.py:68
+msgid "🟡 Pending ads"
+msgstr "🟡 Ootel kuulutused"
+
+#: src/routes/user_advertisements.py:69
+msgid "🔴 Rejected ads"
+msgstr "🔴 Tagasi lükatud kuulutused"
+
+#: src/routes/user_advertisements.py:88
+msgid "🫢 No ads found in this category."
+msgstr "🫢 Selles kategoorias ei leitud kuulutusi."
+
+#: src/routes/user_advertisements.py:90
+msgid "Back"
+msgstr "Tagasi"
+
+#: src/routes/user_advertisements.py:105
+msgid ""
+"📦 *Your ads*.\n"
+"\n"
+"Select an advertisement to manage."
+msgstr ""
+"📦 *Teie kuulutused*.\n"
+"\n"
+"Valige kuulutus haldamiseks."
+
+#: src/routes/user_advertisements.py:141
+msgid "Ad deleted."
+msgstr "Kuulutus kustutatud."
+
+#: src/schemas/advertisement.py:17
+msgid "The {field} should match the pattern '{pattern}'"
+msgstr "{field} peaks vastama mustrile '{pattern}'"
+
+#: src/schemas/advertisement.py:20
+msgid "The {field} field has an invalid value."
+msgstr "{field} väli sisaldab vigast väärtust."
+
+#: src/schemas/advertisement.py:22
+msgid "The {field} field must be greater than {limit_value}"
+msgstr "{field} väli peab olema suurem kui {limit_value}"
+
+#: src/schemas/advertisement.py:26
+msgid "Error: "
+msgstr "Viga: "
+
+#: src/schemas/advertisement.py:26
+msgid "msg"
+msgstr "msg"
+
+#: src/schemas/advertisement.py:57
+msgid "Title cannot be empty or whitespace-only."
+msgstr "Pealkiri ei tohi olla tühi või ainult tühikud."
+
+#: src/schemas/advertisement.py:59
+msgid "Title contains invalid characters."
+msgstr "Pealkirjas on vigaseid märke."
+
+#: src/schemas/advertisement.py:66
+msgid "Description cannot be empty or whitespace-only."
+msgstr "Kirjeldus ei tohi olla tühi või ainult tühikud."
+
+#: src/schemas/advertisement.py:68
+msgid "Description contains invalid characters."
+msgstr "Kirjelduses on vigaseid märke."
+
+#: src/schemas/advertisement.py:75
+msgid "Reason cannot be empty or whitespace-only."
+msgstr "Põhjus ei tohi olla tühi või ainult tühikud."
+
+#: src/schemas/advertisement.py:77
+msgid "Reason contains invalid characters."
+msgstr "Põhjus sisaldab vigaseid märke."
+
+#: src/schemas/advertisement.py:84
+msgid "Price must be a decimal."
+msgstr "Hind peab olema kümnendmurd."
+
+#: src/schemas/advertisement.py:86
+msgid "Price must be positive."
+msgstr "Hind peab olema positiivne."
+
+#: src/utils/helpers.py:61
 msgid "⬅️ Prev"
 msgstr "⬅️ Eelmine"
 
-#: src/utils/helpers.py:57
+#: src/utils/helpers.py:65
 msgid "Next ➡️"
 msgstr "Järgmine ➡️"
 
 #: src/utils/helpers.py:80
+msgid "⬅️ Back"
+msgstr "⬅️ Tagasi"
+
+#: src/utils/helpers.py:88
 msgid "🏠 Home"
 msgstr "🏠 Kodu"
+
+#: src/utils/helpers.py:119
+msgid "📷 Media"
+msgstr "📷 Meedia"
+
+#: src/utils/helpers.py:121
+msgid "📝 Title"
+msgstr "📝 Pealkiri"
+
+#: src/utils/helpers.py:123
+msgid "📄 Description"
+msgstr "📄 Kirjeldus"
+
+#: src/utils/helpers.py:125
+msgid "💡 Reason for Selling"
+msgstr "💡 Müümise põhjus"
+
+#: src/utils/helpers.py:127
+msgid "💰 Price"
+msgstr "💰 Hind"
+
+#: src/utils/helpers.py:129
+msgid "📞 Contact Information"
+msgstr "📞 Kontaktandmed"
+
+#: src/utils/helpers.py:131
+msgid "📍 Location"
+msgstr "📍 Asukoht"
+
+#: src/utils/helpers.py:133
+msgid "🏷️ Hashtags"
+msgstr "🏷️ Hashtagid"
+
+#~ msgid ""
+#~ "📊 *Bot Statistics:*\n"
+#~ "\n"
+#~ "\n"
+#~ "\n"
+#~ msgstr ""
+#~ "📊 *Boti statistika:*\n"
+#~ "\n"
+#~ "\n"
+#~ "\n"
 

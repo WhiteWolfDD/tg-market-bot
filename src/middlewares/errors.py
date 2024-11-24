@@ -5,6 +5,7 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, Message, CallbackQuery, FSInputFile
+from aiogram.utils.i18n import gettext as _
 
 from src.callbacks.main import DeleteMessageCallback
 from src.utils.helpers import escape_markdown, build_inline_keyboard
@@ -38,7 +39,7 @@ class ErrorsMiddleware(BaseMiddleware):
                 chat_id = event.message.chat.id
 
             if chat_id and str(chat_id) not in admins:
-                msg = (
+                msg = _(
                     '😕 *Oops!*\n\n'
                     'Something went wrong while processing your request. Please try again later.\n\n'
                     'Our team has been notified about this error.'
@@ -71,7 +72,7 @@ class ErrorsMiddleware(BaseMiddleware):
 
             # Send the exception log to the admin
             for admin in admins:
-                msg = (
+                msg = _(
                     '💥 *A new error has occurred!*\n\n'
                     'Exception log is attached below.'
                 )

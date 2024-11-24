@@ -5,7 +5,7 @@ from aiogram.utils.i18n import gettext as _
 
 from src.callbacks.admin import ModerateAdCallback, ApproveAdCallback, RejectAdCallback, ManageAdAdminCallback, \
     RenderRequestedAdsCallback
-from src.callbacks.advertisement import BackToAdsCallback, EditAdCallback, DeleteAdCallback
+from src.callbacks.advertisement import EditAdCallback, DeleteAdCallback
 from src.callbacks.pagination import ModeratePaginationCallback
 from src.services.advertisement import AdvertisementService
 from src.utils.helpers import escape_markdown, build_inline_keyboard, build_media_group
@@ -38,7 +38,7 @@ async def render_requested_ads(target: Message | CallbackQuery, page: int = 1) -
     end = start + 10
     current_ads = ads[start:end]
 
-    msg = '📜 *Requested advertisements*.\n\nSelect an advertisement to moderate.'
+    msg = _('📜 *Requested advertisements*.\n\nSelect an advertisement to moderate.')
 
     kbd = build_inline_keyboard(
         keyboard={
@@ -69,14 +69,22 @@ async def moderate_ad_handler(callback_query: CallbackQuery, callback_data: Mode
         return
 
     hashtags = " ".join(advertisement.hashtags)
-    ad_text = (
-        f"*Title:* {advertisement.title}\n"
-        f"*Description:* {advertisement.description}\n"
-        f"*Reason for Selling:* {advertisement.reason}\n"
-        f"*Price:* {advertisement.price} €\n\n"
-        f"*Contact Information:* {advertisement.contact_info}\n"
-        f"*Location:* {advertisement.location}\n\n"
-        f"{hashtags}"
+    ad_text = _(
+        "*Title:* {advertisement_title}\n"
+        "*Description:* {advertisement_description}\n"
+        "*Reason for Selling:* {advertisement_reason}\n"
+        "*Price:* {advertisement_price} €\n\n"
+        "*Contact Information:* {advertisement_contact_info}\n"
+        "*Location:* {advertisement_location}\n\n"
+        "{hashtags}"
+    ).format(
+        advertisement_title=advertisement.title,
+        advertisement_description=advertisement.description,
+        advertisement_reason=advertisement.reason,
+        advertisement_price=advertisement.price,
+        advertisement_contact_info=advertisement.contact_info,
+        advertisement_location=advertisement.location,
+        hashtags=hashtags
     )
 
     kbd = build_inline_keyboard(

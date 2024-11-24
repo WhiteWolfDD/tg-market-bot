@@ -6,11 +6,12 @@ from sqlalchemy import select, update
 from sqlalchemy.orm import joinedload
 
 from src.database import get_session
-from src.models import Category, CategoryTranslation
+from src.models import Category
 from src.utils.log import setup_logging
 from src.utils.redis import get_redis
 
 logger = setup_logging()
+
 
 class CategoryService:
     """
@@ -113,8 +114,6 @@ class CategoryService:
             current_path, current_status = category
             new_status = not current_status
 
-            logger.debug(f"Toggling status for categories with path like '{current_path}%' to {new_status}.")
-
             # Update the status of the category and its children
             await session.execute(
                 update(Category)
@@ -145,15 +144,19 @@ class CategoryService:
         updated = False
         for category in categories:
             if category['path'].startswith(path_prefix):
-                if category['status'] != new_status:
-                    logger.debug(f"Updating status for category ID {category['id']} from {category['status']} to {new_status}.")
-                    category['status'] = new_status
-                    updated = True
+                category['status'] = new_status
+                updated = True  # Set updated to True since we are updating the cache
 
         if updated:
-            await redis_client.set("categories", json.dumps(categories), ex=3600)
-            await redis_client.publish("categories", "update")
-            logger.info("Cache 'categories' updated successfully.")
+            result = await redis_client.set("categories", json.dumps(categories), ex=3600)
+            if result:
+                try:
+                    await redis_client.publish("categories", "update")
+                    logger.info("Cache 'categories' updated successfully.")
+                except Exception as e:
+                    logger.error(f"Failed to update categories cache: {e}")
+            else:
+                logger.error("Failed to update Redis cache.")
         else:
             logger.info("No categories needed status updates in cache.")
 
@@ -230,7 +233,6 @@ class CategoryService:
                 for category in cached_categories:
                     if category['id'] == updated_category['id']:
                         if category['status'] != updated_category['status']:
-                            logger.debug(f"Updating status for category ID {category['id']} from {category['status']} to {updated_category['status']}.")
                             category['status'] = updated_category['status']
                             updated = True
                         break

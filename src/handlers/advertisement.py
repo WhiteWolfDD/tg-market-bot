@@ -191,14 +191,22 @@ async def manage_ad(update: Union[CallbackQuery, Message], ad_id: int = None):
     ad = await AdvertisementService.get_advertisement_by_id(ad_id)
 
     hashtags = " ".join(cast(List[str], ad.hashtags))
-    ad_text = (
-        f"*Title:* {ad.title}\n"
-        f"*Description:* {ad.description}\n"
-        f"*Reason for Selling:* {ad.reason}\n"
-        f"*Price:* {ad.price} €\n"
-        f"*Contact Information:* {ad.contact_info}\n"
-        f"*Location:* {ad.location}\n"
-        f"{hashtags}"
+    ad_text = _(
+        "*Title:* {ad_title}\n"
+        "*Description:* {ad_description}\n"
+        "*Reason for Selling:* {ad_reason}\n"
+        "*Price:* {ad_price} €\n"
+        "*Contact Information:* {ad_contact_info}\n"
+        "*Location:* {ad_location}\n"
+        "{hashtags}"
+    ).format(
+        ad_title=ad.title,
+        ad_description=ad.description,
+        ad_reason=ad.reason,
+        ad_price=ad.price,
+        ad_contact_info=ad.contact_info,
+        ad_location=ad.location,
+        hashtags=hashtags
     )
 
     media_group = await build_media_group(ad.id, ad_text)

@@ -89,7 +89,6 @@ async def show_categories(
     :param page: The current page number, defaults to 1.
     :param page_size: The number of categories per page, defaults to 30.
     """
-    logger.debug(f"show_categories called with parent_id={parent_id}, search_query={search_query}, page={page}, admin_mode={admin_mode}")
 
     if not categories:
         await message_or_query.answer(escape_markdown(_("No categories found.")))
@@ -119,7 +118,6 @@ async def show_categories(
     if is_user_admin and admin_mode:
         # Admin: show all categories
         display_categories = filtered_categories[(page - 1) * page_size: page * page_size]
-        logger.debug(f"Admin mode: Displaying all categories. Total: {len(display_categories)}")
     else:
         # User: show only active categories
         paginated_categories = filtered_categories[(page - 1) * page_size: page * page_size]
@@ -127,7 +125,6 @@ async def show_categories(
             category for category in paginated_categories
             if category.get('status', True)
         ]
-        logger.debug(f"User mode: Displaying active categories. Total: {len(display_categories)}")
 
     total_pages = math.ceil(len(filtered_categories) / page_size)
 
@@ -183,7 +180,6 @@ async def navigate_category(callback_query: CallbackQuery, callback_data: Catego
     :param state: The FSM context.
     :param admin_mode: Whether admin mode is enabled, defaults to False.
     """
-    logger.debug(f"navigate_category called by user {callback_query.from_user.id} with data {callback_data}")
 
     admin_mode = admin_mode or callback_data.admin_mode
 
@@ -327,7 +323,6 @@ async def cancel_last_action(callback_query: CallbackQuery, state: FSMContext) -
     :param callback_query: The callback query.
     :param state: The FSM context.
     """
-    logger.debug(f"cancel_last_action called by user {callback_query.from_user.id}")
     await state.clear()
     await callback_query.answer(_("Action canceled."))
 
@@ -344,10 +339,8 @@ async def confirm_category_selection(callback_query: CallbackQuery, state: FSMCo
     :param callback_query: The callback query.
     :param state: The FSM context.
     """
-    logger.debug(f"confirm_category_selection called by user {callback_query.from_user.id}")
     data = await state.get_data()
     selected_category = data.get('selected_category')
-    logger.debug(f"Selected category: {selected_category}")
 
     if not selected_category:
         await callback_query.answer(_("Please select a category first."))
@@ -370,7 +363,6 @@ async def prompt_search(callback_query: CallbackQuery, state: FSMContext) -> Non
     :param state: The FSM context.
     """
 
-    logger.debug(f"prompt_search called by user {callback_query.from_user.id}")
     await callback_query.message.edit_text(escape_markdown(text=_('Please enter your search query:')),
                                            reply_markup=None)
     await state.set_state(PostAdStates.CATEGORY_SEARCH)
@@ -384,7 +376,6 @@ async def search_categories(message: Message, state: FSMContext) -> None:
     :param message: The message containing the search query.
     :param state: The FSM context.
     """
-    logger.debug(f"search_categories called by user {message.from_user.id}")
     search_query = message.text.strip()
     if not search_query:
         await message.answer(_("Please enter a valid search query."))
